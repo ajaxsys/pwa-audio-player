@@ -1,0 +1,22 @@
+{
+  "name": "pwa-player-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:core": "pnpm --filter @pwa-player/core build",
+    "test": "pnpm build:core && node --test packages/core/test/*.test.js",
+    "dev:vanilla": "pnpm --filter example-vanilla dev",
+    "dev:react": "pnpm --filter example-react dev",
+    "dev:vue": "pnpm --filter example-vue dev",
+    "dev:svelte": "pnpm --filter example-svelte dev"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}

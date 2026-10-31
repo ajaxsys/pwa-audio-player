@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" rx="32" fill="url(#bg2)" />
+  <circle cx="250" cy="250" r="130" fill="none" stroke="#ffffff" stroke-width="8" opacity="0.3" />
+  <circle cx="250" cy="250" r="80" fill="#ffffff" opacity="0.2" />
+  <path d="M225 190 L305 250 L225 310 Z" fill="#ffffff" />
+  <text x="250" y="390" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Morning Mist</text>
+  <text x="250" y="425" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" fill="#fef3c7" text-anchor="middle">Lo-Fi Dreamer</text>
+</svg>

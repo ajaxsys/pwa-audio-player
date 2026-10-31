@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <rect width="500" height="500" rx="32" fill="url(#bg)" />
+  <circle cx="250" cy="250" r="140" fill="#ffffff" opacity="0.1" />
+  <circle cx="250" cy="250" r="90" fill="#ffffff" opacity="0.15" />
+  <path d="M220 180 L320 250 L220 320 Z" fill="#ffffff" />
+  <text x="250" y="390" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">Neon Horizon</text>
+  <text x="250" y="425" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="18" fill="#e0e7ff" text-anchor="middle">Synthwave Echoes</text>
+</svg>

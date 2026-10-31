@@ -1,0 +1,41 @@
+{
+  "name": "@pwa-player/core",
+  "version": "1.0.0",
+  "description": "Framework-agnostic PWA audio player core engine resolving iOS WebKit lockscreen pause deadlocks & MediaSession nuances via Mode F3 keep-alive.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+  },
+  "keywords": [
+    "pwa",
+    "player",
+    "audio",
+    "ios",
+    "safari",
+    "mediasession",
+    "lockscreen",
+    "background-audio",
+    "keep-alive",
+    "mode-f3"
+  ],
+  "author": "PWA Player Contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  }
+}
