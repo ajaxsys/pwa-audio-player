@@ -12,7 +12,8 @@
     "dev:svelte": "pnpm --filter example-svelte dev"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vite-plugin-qrcode": "^0.4.1"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

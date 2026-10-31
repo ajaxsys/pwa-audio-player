@@ -11,6 +11,9 @@ importers:
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
+      vite-plugin-qrcode:
+        specifier: ^0.4.1
+        version: 0.4.1(vite@5.4.21)
 
   examples/react:
     dependencies:
@@ -1081,6 +1084,14 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  uqr@0.1.3:
+    resolution: {integrity: sha512-0rjE8iEJe4YmT9TOhwsZtqCMRLc5DXZUI2UEYUUg63ikBkqqE5EYWaI0etFe/5KUcmcYwLih2RND1kq+hrUJXA==}
+
+  vite-plugin-qrcode@0.4.1:
+    resolution: {integrity: sha512-t3gdCbn/a2HHLK3M8bUrQ+4c+I0YQGJ/STxAL9eI6TBnfdeM/CJr3HctvOb7UYhEtWxHs5xZWpz7kYnRd5w+rA==}
+    peerDependencies:
+      vite: '>=3'
+
   vite@5.4.21:
     resolution: {integrity: sha512-o5a9xKjbtuhY6Bi5S3+HvbRERmouabWbyUcpXXUA1u+GNUKoROi9byOJ8M0nHbHYHkYICiMlqxkg1KkYmm25Sw==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -1987,6 +1998,13 @@ snapshots:
       browserslist: 4.29.5
       escalade: 3.2.0
       picocolors: 1.1.1
+
+  uqr@0.1.3: {}
+
+  vite-plugin-qrcode@0.4.1(vite@5.4.21):
+    dependencies:
+      uqr: 0.1.3
+      vite: 5.4.21
 
   vite@5.4.21:
     dependencies:
