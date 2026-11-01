@@ -35,7 +35,7 @@ importers:
 
   examples/react:
     dependencies:
-      '@pwa-player/core':
+      pwa-audio-player:
         specifier: workspace:*
         version: link:../../packages/core
       react:
@@ -63,7 +63,7 @@ importers:
 
   examples/svelte:
     dependencies:
-      '@pwa-player/core':
+      pwa-audio-player:
         specifier: workspace:*
         version: link:../../packages/core
       svelte:
@@ -85,7 +85,7 @@ importers:
 
   examples/vanilla:
     dependencies:
-      '@pwa-player/core':
+      pwa-audio-player:
         specifier: workspace:*
         version: link:../../packages/core
     devDependencies:
@@ -98,7 +98,7 @@ importers:
 
   examples/vue:
     dependencies:
-      '@pwa-player/core':
+      pwa-audio-player:
         specifier: workspace:*
         version: link:../../packages/core
       vue:

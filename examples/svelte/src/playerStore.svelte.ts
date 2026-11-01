@@ -1,4 +1,4 @@
-import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState, type PlayMode } from '@pwa-player/core';
+import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState, type PlayMode } from 'pwa-audio-player';
 
 let sharedPlayer: PwaPlayer | null = null;
 

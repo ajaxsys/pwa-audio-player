@@ -1,5 +1,5 @@
 import { shallowRef, onUnmounted } from 'vue';
-import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from '@pwa-player/core';
+import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from 'pwa-audio-player';
 
 let sharedPlayer: PwaPlayer | null = null;
 

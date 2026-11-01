@@ -5,8 +5,8 @@ import path from 'node:path';
 console.log('🚀 开始全量多框架打包聚合 (Cloudflare Pages)...');
 
 // 1. 构建核心包
-console.log('\n📦 [1/6] 构建 @pwa-player/core...');
-execSync('pnpm --filter @pwa-player/core build', { stdio: 'inherit' });
+console.log('\n📦 [1/6] 构建 pwa-audio-player...');
+execSync('pnpm --filter pwa-audio-player build', { stdio: 'inherit' });
 
 // 2. 构建 Hub 导航中心
 console.log('\n🧭 [2/6] 构建 example-hub (根入口)...');

@@ -14,7 +14,7 @@
 
 ## Technical Context
 - **Monorepo Structure**:
-  - `packages/core`: `@pwa-player/core` (Framework-agnostic audio engine in TypeScript).
+  - `packages/core`: `pwa-audio-player` (Framework-agnostic audio engine in TypeScript).
   - `examples/_assets`: Shared royalty-free audio tracks (`.wav`), SVG artworks, and shared styles/i18n.
   - `examples/{hub,vanilla,react,vue,svelte}`: Multi-framework demos.
   - `scripts/build-pages.js`: Build aggregator for single-domain Cloudflare Pages deployment (`dist-pages/`).

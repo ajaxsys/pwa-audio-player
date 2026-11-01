@@ -1,4 +1,4 @@
-import { createPwaPlayer, platform, type PlayMode } from '@pwa-player/core';
+import { createPwaPlayer, platform, type PlayMode } from 'pwa-audio-player';
 import { DEMO_TRACKS } from '../_assets/demoTracks';
 import { DEMO_I18N, detectBrowserLang, savePreferredLang, type Lang } from '../_assets/i18n';
 

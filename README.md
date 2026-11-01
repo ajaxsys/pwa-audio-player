@@ -1,4 +1,4 @@
-# 🎧 PWA Player (`@pwa-player/core`)
+# 🎧 PWA Audio Player (`pwa-audio-player`)
 
 > **Universal PWA & Web Audio Engine** — Eliminates iOS WebKit lockscreen freeze-lock deadlocks, hardware decoder eviction, artwork disappearance, and AirPods pause/resume loops.
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 💡 Why PWA Player?
+## 💡 Why PWA Audio Player?
 
 On iOS Mobile Safari and standalone PWAs, using HTML5 `<audio>` for lockscreen playback has long been plagued by low-level WebKit quirks and CoreAudio power-saving behaviors:
 
@@ -92,14 +92,14 @@ Open `http://localhost:5170` or scan the terminal QR code with your iPhone on th
 
 ### Installation
 ```bash
-npm install @pwa-player/core
+npm install pwa-audio-player
 # or
-pnpm add @pwa-player/core
+pnpm add pwa-audio-player
 ```
 
 ### Basic Usage (TypeScript / Vanilla)
 ```typescript
-import { createPwaPlayer } from '@pwa-player/core';
+import { createPwaPlayer } from 'pwa-audio-player';
 
 const player = createPwaPlayer({
   initialQueue: [

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from '@pwa-player/core';
+import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from 'pwa-audio-player';
 
 let sharedPlayer: PwaPlayer | null = null;
 

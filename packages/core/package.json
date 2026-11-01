@@ -1,7 +1,7 @@
 {
-  "name": "@pwa-player/core",
+  "name": "pwa-audio-player",
   "version": "1.0.0",
-  "description": "Framework-agnostic PWA audio player core engine resolving iOS WebKit lockscreen pause deadlocks & MediaSession nuances via single-track silent hold keep-alive.",
+  "description": "Universal PWA & Web audio player engine that eliminates iOS Safari lockscreen freeze-lock deadlocks and background stutters.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -32,8 +32,13 @@
     "keep-alive",
     "silent-hold"
   ],
-  "author": "PWA Player Contributors",
+  "author": "ajaxsys",
   "license": "MIT",
+  "homepage": "https://github.com/ajaxsys/pwa-audio-player#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaxsys/pwa-audio-player.git"
+  },
   "devDependencies": {
     "tsup": "^8.0.0",
     "typescript": "^5.4.0"

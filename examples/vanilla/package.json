@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pwa-player/core": "workspace:*"
+    "pwa-audio-player": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.0",

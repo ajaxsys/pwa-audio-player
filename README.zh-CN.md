@@ -1,4 +1,4 @@
-# 🎧 PWA Player (`@pwa-player/core`)
+# 🎧 PWA Audio Player (`pwa-audio-player`)
 
 > **跨框架通用 PWA 音频播放器内核** — 彻底根治 iOS WebKit / Mobile Safari 锁屏后台暂停假走针死锁、硬件解码器回收、静音封面蒸发与 AirPods 反向按压难题。
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 💡 为什么需要 PWA Player？
+## 💡 为什么需要 PWA Audio Player？
 
 在 iOS Mobile Safari 和 PWA（独立全屏模式 Standalone）中，使用标准 HTML5 `<audio>` 播放音乐一直存在几个令 Web 开发者痛苦万分的**系统级深水区顽疾**：
 
@@ -94,14 +94,14 @@ pnpm dev:demos
 
 ### 安装
 ```bash
-npm install @pwa-player/core
+npm install pwa-audio-player
 # or
-pnpm add @pwa-player/core
+pnpm add pwa-audio-player
 ```
 
 ### 基础调用 (TypeScript / 原生)
 ```typescript
-import { createPwaPlayer } from '@pwa-player/core';
+import { createPwaPlayer } from 'pwa-audio-player';
 
 const player = createPwaPlayer({
   initialQueue: [

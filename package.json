@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build:core": "pnpm --filter @pwa-player/core build",
+    "build:core": "pnpm --filter pwa-audio-player build",
     "build:pages": "node scripts/build-pages.js",
     "deploy:pages": "pnpm run build:pages && wrangler pages deploy dist-pages --project-name=pwa-audio-player --branch=main",
     "test": "pnpm build:core && node --test packages/core/test/*.test.js",

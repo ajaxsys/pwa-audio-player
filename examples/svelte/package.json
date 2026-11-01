@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pwa-player/core": "workspace:*",
+    "pwa-audio-player": "workspace:*",
     "svelte": "^5.0.0"
   },
   "devDependencies": {

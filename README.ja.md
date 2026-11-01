@@ -1,4 +1,4 @@
-# 🎧 PWA Player (`@pwa-player/core`)
+# 🎧 PWA Audio Player (`pwa-audio-player`)
 
 > **クロスフレームワーク対応 PWA オーディオエンジン** — iOS WebKit / Mobile Safari 特有のスリープ時プログレス停止（擬似シーク固まり）、ハードウェアデコーダ破棄、アートワーク消失、AirPods 操作の反転ループを根本から解決します。
 
@@ -15,7 +15,7 @@
 
 ---
 
-## 💡 PWA Player が解決する課題
+## 💡 PWA Audio Player が解決する課題
 
 iOS の Safari やホーム画面追加後の PWA（Standalone）環境で、標準の HTML5 `<audio>` を使ってバックグラウンド再生を行う際、以下のような**システム起因の制約**に直面します：
 
@@ -94,14 +94,14 @@ PC と同じ Wi-Fi に接続した iPhone から、ターミナル上に表示�
 
 ### インストール
 ```bash
-npm install @pwa-player/core
+npm install pwa-audio-player
 # または
-pnpm add @pwa-player/core
+pnpm add pwa-audio-player
 ```
 
 ### 基本的な実装（TypeScript / Vanilla）
 ```typescript
-import { createPwaPlayer } from '@pwa-player/core';
+import { createPwaPlayer } from 'pwa-audio-player';
 
 const player = createPwaPlayer({
   initialQueue: [

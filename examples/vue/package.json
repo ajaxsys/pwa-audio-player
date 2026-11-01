@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@pwa-player/core": "workspace:*",
+    "pwa-audio-player": "workspace:*",
     "vue": "^3.4.21"
   },
   "devDependencies": {

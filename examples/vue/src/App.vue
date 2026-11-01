@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { usePwaPlayer } from './usePwaPlayer';
-import { platform, type PlayMode } from '@pwa-player/core';
+import { platform, type PlayMode } from 'pwa-audio-player';
 import { DEMO_TRACKS } from '../../_assets/demoTracks';
 import { DEMO_I18N, detectBrowserLang, savePreferredLang, type Lang } from '../../_assets/i18n';
 import '../../_assets/player-shared.css';
