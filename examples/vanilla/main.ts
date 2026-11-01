@@ -56,10 +56,11 @@ const txtStep3 = document.getElementById('txt-step-3')!;
 const txtStep4 = document.getElementById('txt-step-4')!;
 const txtStep5 = document.getElementById('txt-step-5')!;
 
-// Back to hub link (dynamic host)
+// Back to hub link (dynamic host & subpath support)
+const isDev = window.location.port === '5173';
 const host = window.location.hostname || 'localhost';
 const protocol = window.location.protocol || 'http:';
-linkBack.href = `${protocol}//${host}:5170`;
+linkBack.href = isDev ? `${protocol}//${host}:5170` : '../';
 
 // Format helper (mm:ss)
 function formatTime(sec: number): string {

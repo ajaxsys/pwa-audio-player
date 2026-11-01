@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build:core": "pnpm --filter @pwa-player/core build",
+    "build:pages": "node scripts/build-pages.js",
     "test": "pnpm build:core && node --test packages/core/test/*.test.js",
     "dev:demos": "node scripts/dev-demos.js",
     "dev:hub": "pnpm --filter example-hub dev",
@@ -14,6 +15,7 @@
     "dev:svelte": "pnpm --filter example-svelte dev"
   },
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "typescript": "^5.4.0",
     "vite-plugin-qrcode": "^0.4.1"
   },

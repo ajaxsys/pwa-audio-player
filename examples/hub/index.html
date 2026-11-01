@@ -582,14 +582,23 @@
     <script type="module">
       import { HUB_I18N, detectBrowserLang, savePreferredLang } from '../../demo-assets/i18n.ts';
 
+      const isDev = window.location.port === '5170';
       const host = window.location.hostname || 'localhost';
       const protocol = window.location.protocol || 'http:';
 
-      document.getElementById('current-host').textContent = host + ':5170';
-      document.getElementById('link-vanilla').href = `${protocol}//${host}:5173`;
-      document.getElementById('link-react').href = `${protocol}//${host}:5174`;
-      document.getElementById('link-vue').href = `${protocol}//${host}:5175`;
-      document.getElementById('link-svelte').href = `${protocol}//${host}:5176`;
+      if (isDev) {
+        document.getElementById('current-host').textContent = host + ':5170';
+        document.getElementById('link-vanilla').href = `${protocol}//${host}:5173`;
+        document.getElementById('link-react').href = `${protocol}//${host}:5174`;
+        document.getElementById('link-vue').href = `${protocol}//${host}:5175`;
+        document.getElementById('link-svelte').href = `${protocol}//${host}:5176`;
+      } else {
+        document.getElementById('current-host').textContent = window.location.host;
+        document.getElementById('link-vanilla').href = './vanilla/';
+        document.getElementById('link-react').href = './react/';
+        document.getElementById('link-vue').href = './vue/';
+        document.getElementById('link-svelte').href = './svelte/';
+      }
 
       function applyLang(lang) {
         const t = HUB_I18N[lang] || HUB_I18N.en;

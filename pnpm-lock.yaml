@@ -8,12 +8,15 @@ importers:
 
   .:
     devDependencies:
+      '@types/node':
+        specifier: ^26.6.6
+        version: 26.6.6
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
       vite-plugin-qrcode:
         specifier: ^0.4.1
-        version: 0.4.1(vite@5.4.21)
+        version: 0.4.1(vite@5.4.21(@types/node@26.6.6))
 
   examples/hub:
     devDependencies:
@@ -22,10 +25,10 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^5.2.0
-        version: 5.4.21
+        version: 5.4.21(@types/node@26.6.6)
       vite-plugin-qrcode:
         specifier: ^0.4.1
-        version: 0.4.1(vite@5.4.21)
+        version: 0.4.1(vite@5.4.21(@types/node@26.6.6))
 
   examples/react:
     dependencies:
@@ -47,13 +50,13 @@ importers:
         version: 18.3.7(@types/react@18.3.31)
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.7.0(vite@5.4.21)
+        version: 4.7.0(vite@5.4.21(@types/node@26.6.6))
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
       vite:
         specifier: ^5.2.0
-        version: 5.4.21
+        version: 5.4.21(@types/node@26.6.6)
 
   examples/svelte:
     dependencies:
@@ -66,13 +69,16 @@ importers:
     devDependencies:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^4.0.0
-        version: 4.0.4(svelte@5.57.3)(vite@5.4.21)
+        version: 4.0.4(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6))
+      svelte-check:
+        specifier: ^4.7.7
+        version: 4.7.7(picomatch@4.0.7)(svelte@5.57.3)(typescript@5.9.3)
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
       vite:
         specifier: ^5.2.0
-        version: 5.4.21
+        version: 5.4.21(@types/node@26.6.6)
 
   examples/vanilla:
     dependencies:
@@ -85,7 +91,7 @@ importers:
         version: 5.9.3
       vite:
         specifier: ^5.2.0
-        version: 5.4.21
+        version: 5.4.21(@types/node@26.6.6)
 
   examples/vue:
     dependencies:
@@ -98,13 +104,13 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^5.0.4
-        version: 5.2.4(vite@5.4.21)(vue@3.5.44(typescript@5.9.3))
+        version: 5.2.4(vite@5.4.21(@types/node@26.6.6))(vue@3.5.44(typescript@5.9.3))
       typescript:
         specifier: ^5.4.0
         version: 5.9.3
       vite:
         specifier: ^5.2.0
-        version: 5.4.21
+        version: 5.4.21(@types/node@26.6.6)
 
   packages/core:
     devDependencies:
@@ -663,6 +669,10 @@ packages:
     peerDependencies:
       acorn: ^8.9.0
 
+  '@sveltejs/load-config@0.2.3':
+    resolution: {integrity: sha512-VT3qmUb8pRV2QrZjd8iAmtg8lf4W0TIjZbvXtz5MKei/q96teWZgGJyyidJzOjzZzvdq616eSRVeMYIQChUTAQ==}
+    engines: {node: '>= 18.0.0'}
+
   '@sveltejs/vite-plugin-svelte-inspector@3.0.1':
     resolution: {integrity: sha512-2CKypmj1sM4GE7HjllT7UKmo4Q6L5xFRd7VMGEWhYnZ+wc6AUVU01IBd7yUi6WnFndEwWoMNOd6e8UjoN0nbvQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22}
@@ -695,6 +705,9 @@ packages:
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
+  '@types/node@26.6.6':
+    resolution: {integrity: sha512-MzQj+8Kx3XI40OmUAE6Qoh58ZMNstNNMwn2nfd3qWsfe7nDNSqJNzes4njhz6AHwrSHOffSLwXU6yb474Q4aog==}
 
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
@@ -934,6 +947,10 @@ packages:
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
+  mri@1.2.0:
+    resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
+    engines: {node: '>=4'}
+
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
@@ -1018,6 +1035,10 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
+  sade@1.8.1:
+    resolution: {integrity: sha512-xal3CZX1Xlo/k4ApwCFrHVACi9fBqJ7V+mwhBsuf/1IOKbBy098Fex+Wa/5QMubw09pSZ/u8EY8PWgevJsXp1A==}
+    engines: {node: '>=6'}
+
   scheduler@0.23.2:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
 
@@ -1037,6 +1058,14 @@ packages:
     resolution: {integrity: sha512-DhuTmvZWux4H1UOnWMB3sk0sbaCVOoQZjv8u1rDoTV0HTdGem9hkAZtl4JZy8P2z4Bg0nT+YMeOFyVr4zcG5Tw==}
     engines: {node: '>=16 || 14 >=14.17'}
     hasBin: true
+
+  svelte-check@4.7.7:
+    resolution: {integrity: sha512-Ge2IMdeTpbJuzNFGRiiMg0RWgbScysKQu7xwcyFJ22+DU9F5nPX51+Q3gHmGqRxYQMx2knreVWt5oCtfe0vf2g==}
+    engines: {node: '>= 18.0.0'}
+    hasBin: true
+    peerDependencies:
+      svelte: ^4.0.0 || ^5.0.0-next.0
+      typescript: ^5.0.0 || ^6.0.0
 
   svelte@5.57.3:
     resolution: {integrity: sha512-5mAftM3SoDV9X0zdF386F9p2pv8iKOwi/KfBS1XnBAkVCKFzVOLHUoa8iGWAt4buoicLmyWVRpuuD5wplXOQsg==}
@@ -1089,6 +1118,9 @@ packages:
 
   ufo@1.6.4:
     resolution: {integrity: sha512-JFNbkD1Svwe0KvGi8GOeLcP4kAWQ609twvCdcHxq1oSL8svv39ZuSvajcD8B+5D0eL4+s1Is2D/O6KN3qcTeRA==}
+
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   update-browserslist-db@1.3.4:
     resolution: {integrity: sha512-t8wonIOdQyOjtPd2VktlBu6QjTVTks6v8bSi7kd0r2Vll8TK1JYDZtRRdbmCHOAMphkZgrzK+L+vXK4pyZ8t4A==}
@@ -1521,25 +1553,27 @@ snapshots:
     dependencies:
       acorn: 8.19.0
 
-  '@sveltejs/vite-plugin-svelte-inspector@3.0.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21))(svelte@5.57.3)(vite@5.4.21)':
+  '@sveltejs/load-config@0.2.3': {}
+
+  '@sveltejs/vite-plugin-svelte-inspector@3.0.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6)))(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte': 4.0.4(svelte@5.57.3)(vite@5.4.21)
+      '@sveltejs/vite-plugin-svelte': 4.0.4(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6))
       debug: 4.4.3
       svelte: 5.57.3
-      vite: 5.4.21
+      vite: 5.4.21(@types/node@26.6.6)
     transitivePeerDependencies:
       - supports-color
 
-  '@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21)':
+  '@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6))':
     dependencies:
-      '@sveltejs/vite-plugin-svelte-inspector': 3.0.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21))(svelte@5.57.3)(vite@5.4.21)
+      '@sveltejs/vite-plugin-svelte-inspector': 3.0.1(@sveltejs/vite-plugin-svelte@4.0.4(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6)))(svelte@5.57.3)(vite@5.4.21(@types/node@26.6.6))
       debug: 4.4.3
       deepmerge: 4.3.1
       kleur: 4.1.5
       magic-string: 0.30.21
       svelte: 5.57.3
-      vite: 5.4.21
-      vitefu: 1.1.3(vite@5.4.21)
+      vite: 5.4.21(@types/node@26.6.6)
+      vitefu: 1.1.3(vite@5.4.21(@types/node@26.6.6))
     transitivePeerDependencies:
       - supports-color
 
@@ -1568,6 +1602,10 @@ snapshots:
 
   '@types/estree@1.0.9': {}
 
+  '@types/node@26.6.6':
+    dependencies:
+      undici-types: 8.9.0
+
   '@types/prop-types@15.7.15': {}
 
   '@types/react-dom@18.3.7(@types/react@18.3.31)':
@@ -1579,7 +1617,7 @@ snapshots:
       '@types/prop-types': 15.7.15
       csstype: 3.2.3
 
-  '@vitejs/plugin-react@4.7.0(vite@5.4.21)':
+  '@vitejs/plugin-react@4.7.0(vite@5.4.21(@types/node@26.6.6))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-transform-react-jsx-self': 7.29.7(@babel/core@7.29.7)
@@ -1587,13 +1625,13 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.27
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 5.4.21
+      vite: 5.4.21(@types/node@26.6.6)
     transitivePeerDependencies:
       - supports-color
 
-  '@vitejs/plugin-vue@5.2.4(vite@5.4.21)(vue@3.5.44(typescript@5.9.3))':
+  '@vitejs/plugin-vue@5.2.4(vite@5.4.21(@types/node@26.6.6))(vue@3.5.44(typescript@5.9.3))':
     dependencies:
-      vite: 5.4.21
+      vite: 5.4.21(@types/node@26.6.6)
       vue: 3.5.44(typescript@5.9.3)
 
   '@vue/compiler-core@3.5.44':
@@ -1826,6 +1864,8 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.6.4
 
+  mri@1.2.0: {}
+
   ms@2.1.3: {}
 
   mz@2.7.0:
@@ -1914,6 +1954,10 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.66.0
       fsevents: 2.3.3
 
+  sade@1.8.1:
+    dependencies:
+      mri: 1.2.0
+
   scheduler@0.23.2:
     dependencies:
       loose-envify: 1.4.0
@@ -1933,6 +1977,19 @@ snapshots:
       pirates: 4.0.7
       tinyglobby: 0.2.17
       ts-interface-checker: 0.1.13
+
+  svelte-check@4.7.7(picomatch@4.0.7)(svelte@5.57.3)(typescript@5.9.3):
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.31
+      '@sveltejs/load-config': 0.2.3
+      chokidar: 4.0.3
+      fdir: 6.5.0(picomatch@4.0.7)
+      picocolors: 1.1.1
+      sade: 1.8.1
+      svelte: 5.57.3
+      typescript: 5.9.3
+    transitivePeerDependencies:
+      - picomatch
 
   svelte@5.57.3:
     dependencies:
@@ -2005,6 +2062,8 @@ snapshots:
 
   ufo@1.6.4: {}
 
+  undici-types@8.9.0: {}
+
   update-browserslist-db@1.3.4(browserslist@4.29.5):
     dependencies:
       browserslist: 4.29.5
@@ -2013,22 +2072,23 @@ snapshots:
 
   uqr@0.1.3: {}
 
-  vite-plugin-qrcode@0.4.1(vite@5.4.21):
+  vite-plugin-qrcode@0.4.1(vite@5.4.21(@types/node@26.6.6)):
     dependencies:
       uqr: 0.1.3
-      vite: 5.4.21
+      vite: 5.4.21(@types/node@26.6.6)
 
-  vite@5.4.21:
+  vite@5.4.21(@types/node@26.6.6):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.5.32
       rollup: 4.66.0
     optionalDependencies:
+      '@types/node': 26.6.6
       fsevents: 2.3.3
 
-  vitefu@1.1.3(vite@5.4.21):
+  vitefu@1.1.3(vite@5.4.21(@types/node@26.6.6)):
     optionalDependencies:
-      vite: 5.4.21
+      vite: 5.4.21(@types/node@26.6.6)
 
   vue@3.5.44(typescript@5.9.3):
     dependencies:

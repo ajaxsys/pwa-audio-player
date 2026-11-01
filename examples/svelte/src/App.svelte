@@ -69,9 +69,10 @@
     }
   }
 
+  const isDev = typeof window !== 'undefined' && window.location.port === '5176';
   const host = typeof window !== 'undefined' ? (window.location.hostname || 'localhost') : 'localhost';
   const protocol = typeof window !== 'undefined' ? (window.location.protocol || 'http:') : 'http:';
-  const hubUrl = `${protocol}//${host}:5170`;
+  const hubUrl = isDev ? `${protocol}//${host}:5170` : '../';
 </script>
 
 <div class="player-container" data-theme="svelte">

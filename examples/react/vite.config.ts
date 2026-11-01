@@ -4,6 +4,7 @@ import { qrcode } from 'vite-plugin-qrcode';
 import path from 'node:path';
 
 export default defineConfig({
+  base: './',
   plugins: [react(), qrcode()],
   server: {
     port: 5174,
