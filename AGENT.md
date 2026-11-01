@@ -5,7 +5,7 @@
 > 2. Always use public generic identifiers:
 >    - Organization / GitHub account: `ajaxsys`
 >    - Author / Organization: `ajaxsys`
->    - Repositories: `https://github.com/ajaxsys/pwa-player`
+>    - Repositories: `https://github.com/ajaxsys/pwa-audio-player`
 >    - Demos & Deployment: `https://pwa-audio-player.pages.dev`
 > 3. Preserve clean top-level repository structure. Keep shared demo assets under `examples/_assets/`.
 > 4. Always respond in Chinese, and write code/commits in English.

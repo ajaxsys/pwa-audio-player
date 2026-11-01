@@ -81,8 +81,8 @@ stateDiagram-v2
 
 ### ローカルでの起動方法
 ```bash
-git clone https://github.com/ajaxsys/pwa-player.git
-cd pwa-player
+git clone https://github.com/ajaxsys/pwa-audio-player.git
+cd pwa-audio-player
 pnpm install
 pnpm dev:demos
 ```

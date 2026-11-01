@@ -79,8 +79,8 @@ A unified test suite is available under `examples/` with dedicated framework the
 
 ### Running Demos Locally
 ```bash
-git clone https://github.com/ajaxsys/pwa-player.git
-cd pwa-player
+git clone https://github.com/ajaxsys/pwa-audio-player.git
+cd pwa-audio-player
 pnpm install
 pnpm dev:demos
 ```
