@@ -16,7 +16,7 @@
   const state = $derived(playerStore.state);
   const currentTrack = $derived(state.currentTrack);
   const isPlaying = $derived(state.isPlaying);
-  const isF3Holding = $derived(state.isF3Holding);
+  const isHolding = $derived(state.isHolding);
   const currentTime = $derived(state.currentTime);
   const duration = $derived(state.duration);
   const queueIndex = $derived(state.queueIndex);

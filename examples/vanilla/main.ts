@@ -69,8 +69,8 @@ function renderPlaylist(currentIndex: number) {
 
 // Initial Platform badge
 badgePlatform.textContent = platform.isIOS
-  ? '📱 iOS / Safari (F3 已就绪)'
-  : '💻 Desktop / Other (原生 Pause)';
+  ? '📱 iOS / Safari (静音保活已就绪)'
+  : '💻 桌面/Android (原生 Pause)';
 badgePlatform.classList.add('active');
 
 // Mode icon lookup
@@ -112,13 +112,13 @@ player.subscribe((state) => {
     lyricBox.textContent = state.isPlaying ? '♪ 正在播放 ♪' : '♪ 点击播放开始测试 ♪';
   }
 
-  // F3 Status Badge
-  if (state.isF3Holding) {
-    badgeF3.textContent = '🛡️ Mode F3: 静音保活中';
+  // KeepAlive Status Badge
+  if (state.isHolding) {
+    badgeF3.textContent = '🛡️ 硬件保活: 静音保持中';
     badgeF3.className = 'badge holding';
-    badgeState.textContent = '状态: F3-HOLDING';
+    badgeState.textContent = '状态: SILENT-HOLD';
   } else {
-    badgeF3.textContent = '🛡️ Mode F3: 待命';
+    badgeF3.textContent = '🛡️ 硬件保活: 待命';
     badgeF3.className = 'badge';
     badgeState.textContent = `状态: ${state.playbackState.toUpperCase()}`;
   }

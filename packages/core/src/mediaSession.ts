@@ -133,7 +133,10 @@ export class MediaSessionController {
   }
 
   /**
-   * Apply triple invisible lock during Mode F3 silent hold.
+   * Apply Triple-Lock UI Masking during silent-hold keep-alive:
+   * 1. Mask playbackState as 'paused' so the OS displays ▶️ and stops fake progress calculation
+   * 2. Retain current track metadata (title, artist, artwork) so lockscreen card remains intact
+   * 3. Freeze setPositionState at exact breakpoint position
    */
   public applyTripleInvisibleLock(track: Track | null, duration: number, position: number): void {
     if (!this.isSupported()) return;

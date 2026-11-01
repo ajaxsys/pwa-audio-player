@@ -53,11 +53,11 @@ test('PwaPlayer - advances automatically on ended event (auto-chaining)', async 
   player.destroy();
 });
 
-test('PwaPlayer - isolates ended and timeupdate events while in Mode F3 silent hold', async () => {
+test('PwaPlayer - isolates ended and timeupdate events while in silent hold', async () => {
   const { mockAudio } = setupMockDomEnv();
   const player = new PwaPlayer({
     audioElement: mockAudio,
-    keepAlive: { strategy: 'f3', hardPauseTimeoutMs: 0 },
+    keepAlive: { strategy: 'silent-hold', hardPauseTimeoutMs: 0 },
     initialQueue: [
       { id: 1, title: 'Song 1', src: '1.mp3', duration: 180 },
       { id: 2, title: 'Song 2', src: '2.mp3', duration: 200 }
@@ -68,9 +68,11 @@ test('PwaPlayer - isolates ended and timeupdate events while in Mode F3 silent h
   await player.play();
   mockAudio.currentTime = 50;
 
-  // Pause under iOS F3 strategy -> enters silent hold
+  // Pause under silent-hold strategy -> enters silent hold
   player.pause();
+  assert.equal(player.getState().isHolding, true);
   assert.equal(player.getState().isF3Holding, true);
+  assert.equal(player.getState().playbackState, 'holding');
   assert.equal(mockAudio.loop, true);
 
   // Simulate 2s silent WAV firing ended event in background
@@ -82,10 +84,10 @@ test('PwaPlayer - isolates ended and timeupdate events while in Mode F3 silent h
   // Should NOT advance track, should NOT overwrite song duration
   assert.equal(player.getState().currentTrack?.title, 'Song 1', 'Queue MUST NOT advance when silent WAV ends');
   assert.equal(player.getState().queueIndex, 0);
-  assert.equal(player.getState().isF3Holding, true);
+  assert.equal(player.getState().isHolding, true);
 
   // Resuming
   await player.play();
-  assert.equal(player.getState().isF3Holding, false);
+  assert.equal(player.getState().isHolding, false);
   player.destroy();
 });

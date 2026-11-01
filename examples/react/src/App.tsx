@@ -28,7 +28,7 @@ export default function App() {
     enableLockscreenLyrics: true
   });
 
-  const { currentTrack, isPlaying, isF3Holding, currentTime, duration, queueIndex, playMode } = state;
+  const { currentTrack, isPlaying, isHolding, currentTime, duration, queueIndex, playMode } = state;
 
   const percent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -51,7 +51,7 @@ export default function App() {
       <div style={{ textAlign: 'center' }}>
         <h1 style={{ fontSize: 22, fontWeight: 700 }}>PWA Player · React Demo</h1>
         <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>
-          基于 React 18 <code>useSyncExternalStore</code> 响应式直连
+          iOS 锁屏硬件保活与标准 MediaSession 播放器 (React Hook)
         </p>
       </div>
 
@@ -60,15 +60,15 @@ export default function App() {
           fontSize: 11, padding: '4px 10px', borderRadius: 9999,
           background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', color: '#34d399'
         }}>
-          {platform.isIOS ? '📱 iOS Safari (F3 换源就绪)' : '💻 Desktop (原生 Pause)'}
+          {platform.isIOS ? '📱 iOS Safari (单轨静音保活已就绪)' : '💻 桌面/Android (原生 Pause)'}
         </span>
         <span style={{
           fontSize: 11, padding: '4px 10px', borderRadius: 9999,
-          background: isF3Holding ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.06)',
-          border: `1px solid ${isF3Holding ? '#f59e0b' : 'rgba(255,255,255,0.1)'}`,
-          color: isF3Holding ? '#fbbf24' : '#94a3b8'
+          background: isHolding ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255, 255, 255, 0.06)',
+          border: `1px solid ${isHolding ? '#f59e0b' : 'rgba(255,255,255,0.1)'}`,
+          color: isHolding ? '#fbbf24' : '#94a3b8'
         }}>
-          {isF3Holding ? '🛡️ Mode F3: 静音保活中' : `状态: ${state.playbackState.toUpperCase()}`}
+          {isHolding ? '🛡️ 硬件保活: 静音保持中 (Silent-Hold)' : `状态: ${state.playbackState.toUpperCase()}`}
         </span>
       </div>
 

@@ -9,12 +9,37 @@ export interface KeepAliveEvents {
   onRequestResume?: () => void;
 }
 
-export class ModeF3Controller {
+/**
+ * Hardware Audio Session Keeper (Silent-Hold Architecture)
+ *
+ * Background:
+ * On iOS Safari / PWA, if an HTMLMediaElement calls native `audio.pause()` while in the
+ * background (or screen locked), WebKit releases the element's CoreAudio hardware PCM decoding slot
+ * within 3-5 seconds. When the user later hits "play" from the lockscreen, the JS promise resolves
+ * and the lockscreen scrubber advances ("fake progress"), but the audio hardware clock is frozen
+ * and the device remains completely silent.
+ *
+ * Solution (Single-Track Silent Hold):
+ * 1. Never call `audio.pause()` on the active HTMLMediaElement while on iOS.
+ * 2. Seamlessly swap `src` to an in-memory 2s zero-amplitude PCM WAV (loop=true) to keep CoreAudio active.
+ * 3. Apply Triple-Lock UI Masking:
+ *    - Force MediaSession playbackState to 'paused' (displays ▶️ icon on lockscreen, stops fake ticking)
+ *    - Retain original track's title, artist, and album artwork (avoids metadata wipe)
+ *    - Pin MediaSession setPositionState at exact breakpoint
+ * 4. AirPods Smart Flip-Flop:
+ *    When audio is actively outputting silent WAV, pressing AirPods stem dispatches a "pause" action.
+ *    The keeper automatically inverts this "pause" into a "resume" command to wake up the real track.
+ * 5. Breakpoint Seek Tolerance:
+ *    Restores real track stream and safely seeks back once metadata is available.
+ * 6. Inactivity Timeout:
+ *    Safely falls back to native pause after a configurable duration (default 5 min) to prevent indefinite battery drain.
+ */
+export class SilentHoldKeeper {
   private audioEl: HTMLAudioElement;
   private options: Required<KeepAliveOptions>;
   private events: KeepAliveEvents;
 
-  private isHolding = false;
+  private holding = false;
   private savedPauseTime = 0;
   private savedDuration = 0;
   private savedSongSrc = '';
@@ -34,15 +59,21 @@ export class ModeF3Controller {
     this.events = events;
   }
 
-  public shouldActivateF3(): boolean {
-    if (this.options.strategy === 'f3') return true;
-    if (this.options.strategy === 'native') return false;
+  public shouldActivateSilentHold(): boolean {
+    const strat = this.options.strategy;
+    if (strat === 'silent-hold' || strat === 'f3') return true;
+    if (strat === 'native') return false;
     // 'auto' strategy: activate specifically on iOS Safari & Standalone PWA
     return platform.isIOS;
   }
 
+  public isHolding(): boolean {
+    return this.holding;
+  }
+
+  /** Backward-compatible alias for isHolding */
   public isF3Holding(): boolean {
-    return this.isHolding;
+    return this.isHolding();
   }
 
   public getSavedPauseTime(): number {
@@ -50,13 +81,13 @@ export class ModeF3Controller {
   }
 
   public updateSavedPauseTime(time: number): void {
-    if (!this.isHolding) return;
+    if (!this.holding) return;
     this.savedPauseTime = Math.max(0, this.savedDuration > 0 ? Math.min(time, this.savedDuration) : time);
   }
 
   /**
    * Intercept pause action.
-   * @returns true if handled by Mode F3 (caller MUST NOT call audio.pause())
+   * @returns true if handled by silent-hold keeper (caller MUST NOT call audio.pause())
    */
   public handlePause(
     track: Track | null,
@@ -64,15 +95,15 @@ export class ModeF3Controller {
     duration: number,
     currentSrc: string
   ): boolean {
-    if (!this.shouldActivateF3()) {
+    if (!this.shouldActivateSilentHold()) {
       return false;
     }
 
-    // AirPods Flip-Flop Toggle:
-    // If user presses AirPods stem while silent WAV is playing, iOS sends "pause" action.
-    // Invert it into resume immediately!
-    if (this.isHolding) {
-      console.info('[PwaPlayer:F3] Flip-flop triggered: Inverting pause action to resume.');
+    // AirPods Flip-Flop Inversion:
+    // If user clicks AirPods stem while silent WAV is playing, iOS mediaremoted sends a "pause" action.
+    // Invert it into resume immediately to restart the actual track!
+    if (this.holding) {
+      console.info('[PwaPlayer:KeepAlive] AirPods Flip-Flop: Inverting pause action to resume.');
       this.handleResume();
       return true;
     }
@@ -86,7 +117,7 @@ export class ModeF3Controller {
     this.savedDuration = (duration > 0 && isFinite(duration)) ? duration : (this.audioEl.duration || 0);
     this.savedSongSrc = songUrl;
     this.savedTrack = track;
-    this.isHolding = true;
+    this.holding = true;
 
     this.clearTimeoutTimer();
 
@@ -98,7 +129,7 @@ export class ModeF3Controller {
     this.audioEl.play().then(() => {
       this.events.onKeepAliveEnter?.();
     }).catch((err) => {
-      console.warn('[PwaPlayer:F3] Silent WAV play failed, falling back to native pause:', err);
+      console.warn('[PwaPlayer:KeepAlive] Silent WAV play failed, falling back to native pause:', err);
       this.reset();
       try { this.audioEl.pause(); } catch {}
     });
@@ -106,8 +137,8 @@ export class ModeF3Controller {
     // Schedule battery conservation hard timeout
     if (this.options.hardPauseTimeoutMs > 0) {
       this.timeoutTimer = setTimeout(() => {
-        if (this.isHolding) {
-          console.info('[PwaPlayer:F3] Inactivity timeout reached. Executing hard pause to conserve power.');
+        if (this.holding) {
+          console.info('[PwaPlayer:KeepAlive] Inactivity timeout reached. Executing hard pause to conserve power.');
           this.reset();
           try { this.audioEl.pause(); } catch {}
           this.events.onHardPauseTimeout?.();
@@ -123,10 +154,10 @@ export class ModeF3Controller {
 
   /**
    * Intercept resume action.
-   * @returns true if handled by Mode F3 recovery
+   * @returns true if handled by silent-hold recovery
    */
   public handleResume(onPlaySuccess?: () => void): boolean {
-    if (!this.isHolding) {
+    if (!this.holding) {
       return false;
     }
 
@@ -134,9 +165,8 @@ export class ModeF3Controller {
 
     const targetTime = this.savedPauseTime;
     const songSrc = this.savedSongSrc;
-    const track = this.savedTrack;
 
-    this.isHolding = false;
+    this.holding = false;
     this.audioEl.loop = false;
 
     if (!songSrc || songSrc === window.location.href) {
@@ -153,7 +183,7 @@ export class ModeF3Controller {
             this.audioEl.currentTime = targetTime;
           }
         } catch (e) {
-          console.warn('[PwaPlayer:F3] Breakpoint seek failed:', e);
+          console.warn('[PwaPlayer:KeepAlive] Breakpoint seek failed:', e);
         }
         this.events.onKeepAliveExit?.();
         onPlaySuccess?.();
@@ -169,8 +199,8 @@ export class ModeF3Controller {
         this.audioEl.addEventListener('loadedmetadata', onMetadata);
       }
     }).catch((err) => {
-      console.error('[PwaPlayer:F3] Track resume failed:', err);
-      this.isHolding = false;
+      console.error('[PwaPlayer:KeepAlive] Track resume failed:', err);
+      this.holding = false;
       this.audioEl.loop = false;
     });
 
@@ -179,7 +209,7 @@ export class ModeF3Controller {
 
   public reset(): void {
     this.clearTimeoutTimer();
-    this.isHolding = false;
+    this.holding = false;
     this.savedPauseTime = 0;
     this.savedDuration = 0;
     this.savedSongSrc = '';
@@ -196,3 +226,6 @@ export class ModeF3Controller {
     }
   }
 }
+
+/** Backward-compatible export alias */
+export const ModeF3Controller = SilentHoldKeeper;

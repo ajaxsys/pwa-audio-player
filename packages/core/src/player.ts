@@ -7,8 +7,7 @@ import type {
   PlayerListener,
   LyricLine
 } from './types';
-import { platform } from './platform';
-import { ModeF3Controller } from './keepAlive';
+import { SilentHoldKeeper } from './keepAlive';
 import { MediaSessionController } from './mediaSession';
 import { PlaylistManager } from './playlist';
 import { GestureGuardian } from './gesture';
@@ -17,7 +16,7 @@ import { parseLrc, getActiveLyric } from './lyric';
 export class PwaPlayer {
   private audioEl: HTMLAudioElement;
   private playlist: PlaylistManager;
-  private f3: ModeF3Controller;
+  private keepAlive: SilentHoldKeeper;
   private mediaSession: MediaSessionController;
   private gesture: GestureGuardian;
 
@@ -32,6 +31,7 @@ export class PwaPlayer {
   private activeLyricText = '';
   private enableLockscreenLyrics: boolean;
   private preloadAdjacent: boolean;
+  private cachedState: PwaPlayerState | null = null;
 
   constructor(options: PwaPlayerOptions = {}) {
     // 1. Audio element initialization
@@ -57,7 +57,7 @@ export class PwaPlayer {
 
     this.gesture = new GestureGuardian();
 
-    this.f3 = new ModeF3Controller(
+    this.keepAlive = new SilentHoldKeeper(
       this.audioEl,
       options.keepAlive,
       {
@@ -66,7 +66,7 @@ export class PwaPlayer {
           this.mediaSession.applyTripleInvisibleLock(
             track,
             this.duration,
-            this.f3.getSavedPauseTime()
+            this.keepAlive.getSavedPauseTime()
           );
           this.notify();
         },
@@ -108,8 +108,8 @@ export class PwaPlayer {
   // ================= Public Playback Controls =================
 
   public async play(): Promise<void> {
-    if (this.f3.isF3Holding()) {
-      this.f3.handleResume(() => {
+    if (this.keepAlive.isHolding()) {
+      this.keepAlive.handleResume(() => {
         this.isPlaying = true;
         this.warmupAdjacent();
         this.notify();
@@ -141,15 +141,15 @@ export class PwaPlayer {
     if (!this.audioEl) return;
     this.currentTime = this.audioEl.currentTime || this.currentTime;
 
-    // Delegate to Mode F3 if iOS keep-alive is active
-    const handledByF3 = this.f3.handlePause(
+    // Delegate to silent-hold keeper if iOS background keep-alive is active
+    const handledByKeepAlive = this.keepAlive.handlePause(
       this.playlist.getCurrentTrack(),
       this.currentTime,
       this.duration,
       this.audioEl.src
     );
 
-    if (handledByF3) {
+    if (handledByKeepAlive) {
       this.isPlaying = false;
       this.notify();
       return;
@@ -164,7 +164,7 @@ export class PwaPlayer {
   }
 
   public toggle(): void {
-    if (this.f3.isF3Holding()) {
+    if (this.keepAlive.isHolding()) {
       this.play();
       return;
     }
@@ -177,7 +177,7 @@ export class PwaPlayer {
   }
 
   public async next(): Promise<void> {
-    this.f3.reset();
+    this.keepAlive.reset();
     this.mediaSession.clearPosition();
 
     const track = this.playlist.stepNext();
@@ -190,7 +190,7 @@ export class PwaPlayer {
   }
 
   public async prev(): Promise<void> {
-    this.f3.reset();
+    this.keepAlive.reset();
     this.mediaSession.clearPosition();
 
     const track = this.playlist.stepPrev();
@@ -206,8 +206,8 @@ export class PwaPlayer {
     const target = Math.max(0, this.duration > 0 ? Math.min(seconds, this.duration) : seconds);
     this.currentTime = target;
 
-    if (this.f3.isF3Holding()) {
-      this.f3.updateSavedPauseTime(target);
+    if (this.keepAlive.isHolding()) {
+      this.keepAlive.updateSavedPauseTime(target);
       this.mediaSession.applyTripleInvisibleLock(this.playlist.getCurrentTrack(), this.duration, target);
       this.notify();
       return;
@@ -221,7 +221,7 @@ export class PwaPlayer {
   }
 
   public setQueue(tracks: Track[], startIndex = 0, autoPlay = true): void {
-    this.f3.reset();
+    this.keepAlive.reset();
     this.mediaSession.clearPosition();
     this.playlist.setQueue(tracks, startIndex);
 
@@ -235,7 +235,7 @@ export class PwaPlayer {
 
   public playTrackByIndex(index: number): void {
     if (this.playlist.setIndex(index)) {
-      this.f3.reset();
+      this.keepAlive.reset();
       this.mediaSession.clearPosition();
       const track = this.playlist.getCurrentTrack();
       if (track) {
@@ -263,11 +263,20 @@ export class PwaPlayer {
   // ================= State & Subscription =================
 
   public getState(): PwaPlayerState {
-    return {
+    if (!this.cachedState) {
+      this.rebuildCachedState();
+    }
+    return this.cachedState!;
+  }
+
+  private rebuildCachedState(): void {
+    const isHold = this.keepAlive.isHolding();
+    this.cachedState = {
       currentTrack: this.playlist.getCurrentTrack(),
       playbackState: this.getPlaybackState(),
       isPlaying: this.isPlaying,
-      isF3Holding: this.f3.isF3Holding(),
+      isHolding: isHold,
+      isF3Holding: isHold,
       currentTime: this.currentTime,
       duration: this.duration,
       queue: this.playlist.getQueue(),
@@ -288,7 +297,7 @@ export class PwaPlayer {
   }
 
   public destroy(): void {
-    this.f3.reset();
+    this.keepAlive.reset();
     this.gesture.clear();
     this.listeners.clear();
     try {
@@ -300,13 +309,14 @@ export class PwaPlayer {
   // ================= Internal Mechanics =================
 
   private getPlaybackState(): PlaybackState {
-    if (this.f3.isF3Holding()) return 'f3-holding';
+    if (this.keepAlive.isHolding()) return 'holding';
     if (this.isPlaying) return 'playing';
     return this.currentTime > 0 ? 'paused' : 'idle';
   }
 
   private notify(): void {
-    const state = this.getState();
+    this.rebuildCachedState();
+    const state = this.cachedState!;
     for (const listener of this.listeners) {
       try {
         listener(state);
@@ -362,7 +372,7 @@ export class PwaPlayer {
   }
 
   private handleMediaSessionPlay(): void {
-    if (this.f3.isF3Holding()) {
+    if (this.keepAlive.isHolding()) {
       this.toggle();
       return;
     }
@@ -375,7 +385,7 @@ export class PwaPlayer {
     if (!this.audioEl || typeof this.audioEl.addEventListener !== 'function') return;
 
     this.audioEl.addEventListener('play', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       this.isPlaying = true;
       this.mediaSession.registerHandlers();
       this.mediaSession.updatePlaybackState('playing');
@@ -390,7 +400,7 @@ export class PwaPlayer {
     });
 
     this.audioEl.addEventListener('pause', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       this.isPlaying = false;
       this.mediaSession.updatePlaybackState('paused');
       this.mediaSession.updatePosition(this.currentTime, this.duration);
@@ -398,7 +408,7 @@ export class PwaPlayer {
     });
 
     this.audioEl.addEventListener('timeupdate', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
 
       this.currentTime = this.audioEl.currentTime;
       if (this.audioEl.duration && !isNaN(this.audioEl.duration) && isFinite(this.audioEl.duration)) {
@@ -422,7 +432,7 @@ export class PwaPlayer {
     });
 
     this.audioEl.addEventListener('loadedmetadata', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       if (this.audioEl.duration && !isNaN(this.audioEl.duration) && isFinite(this.audioEl.duration)) {
         this.duration = this.audioEl.duration;
       }
@@ -431,20 +441,20 @@ export class PwaPlayer {
     });
 
     this.audioEl.addEventListener('seeked', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       this.currentTime = this.audioEl.currentTime;
       this.mediaSession.updatePosition(this.currentTime, this.duration);
       this.notify();
     });
 
     this.audioEl.addEventListener('ended', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       // Seamless chain advance to next track
       this.next();
     });
 
     this.audioEl.addEventListener('error', () => {
-      if (this.f3.isF3Holding()) return;
+      if (this.keepAlive.isHolding()) return;
       console.warn('[PwaPlayer] Audio element error encountered:', this.audioEl.error);
       this.isPlaying = false;
       this.notify();

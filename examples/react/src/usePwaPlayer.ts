@@ -1,19 +1,18 @@
-import { useRef, useSyncExternalStore } from 'react';
+import { useState, useEffect } from 'react';
 import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from '@pwa-player/core';
 
 export function usePwaPlayer(options?: PwaPlayerOptions) {
-  const playerRef = useRef<PwaPlayer | null>(null);
+  const [player] = useState(() => createPwaPlayer(options));
+  const [state, setState] = useState<PwaPlayerState>(() => player.getState());
 
-  if (!playerRef.current) {
-    playerRef.current = createPwaPlayer(options);
-  }
-
-  const player = playerRef.current;
-
-  const state = useSyncExternalStore(
-    (callback) => player.subscribe(() => callback()),
-    () => player.getState()
-  );
+  useEffect(() => {
+    const unsubscribe = player.subscribe((newState) => {
+      setState(newState);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [player]);
 
   return {
     player,

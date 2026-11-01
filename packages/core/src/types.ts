@@ -16,22 +16,31 @@ export interface Track {
   [key: string]: any;
 }
 
-export type PlaybackState = 'idle' | 'playing' | 'paused' | 'buffering' | 'f3-holding';
+/**
+ * Playback state of the player:
+ * - 'idle': Not initialized or track cleared
+ * - 'playing': Audio is actively playing
+ * - 'paused': Audio is natively paused
+ * - 'buffering': Loading / awaiting audio buffer
+ * - 'holding': In iOS silent-stream keep-alive hold (hardware PCM slot maintained, UI masked as paused)
+ */
+export type PlaybackState = 'idle' | 'playing' | 'paused' | 'buffering' | 'holding' | 'f3-holding';
 
 export type PlayMode = 'sequence' | 'loop' | 'single' | 'shuffle';
 
 export interface KeepAliveOptions {
   /**
-   * Keep-alive strategy:
-   * - 'auto': Automatically enable Mode F3 on iOS Safari/PWA, use native pause on other platforms.
-   * - 'f3': Force Mode F3 keep-alive across all platforms.
-   * - 'native': Always use native audio.pause().
+   * Keep-alive strategy for maintaining hardware audio decoding on iOS background/lockscreen:
+   * - 'auto': Automatically activate silent-hold stream on iOS Safari / Standalone PWA, use native pause on other platforms.
+   * - 'silent-hold' (or 'f3'): Force silent-hold keep-alive across all platforms.
+   * - 'native': Always use native audio.pause() without keep-alive.
+   * Default: 'auto'.
    */
-  strategy?: 'auto' | 'f3' | 'native';
+  strategy?: 'auto' | 'silent-hold' | 'f3' | 'native';
 
   /**
-   * Inactivity timeout in milliseconds before transitioning from F3 silent hold
-   * to hard native pause to preserve battery. Set to 0 to disable timeout.
+   * Inactivity timeout in milliseconds before transitioning from silent hold
+   * to hard native pause to conserve battery. Set to 0 to disable timeout.
    * Default: 5 * 60 * 1000 (5 minutes).
    */
   hardPauseTimeoutMs?: number;
@@ -92,6 +101,9 @@ export interface PwaPlayerState {
   currentTrack: Track | null;
   playbackState: PlaybackState;
   isPlaying: boolean;
+  /** True when audio element is maintaining hardware playback pipeline via silent loop */
+  isHolding: boolean;
+  /** Backward-compatible alias for isHolding */
   isF3Holding: boolean;
   currentTime: number;
   duration: number;

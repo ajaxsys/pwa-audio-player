@@ -1,3 +1,10 @@
+import track1 from './track1.wav';
+import track2 from './track2.wav';
+import track3 from './track3.wav';
+import cover1 from './cover1.svg';
+import cover2 from './cover2.svg';
+import cover3 from './cover3.svg';
+
 export interface DemoTrackItem {
   id: number;
   title: string;
@@ -15,8 +22,8 @@ export const DEMO_TRACKS: DemoTrackItem[] = [
     title: 'Neon Horizon',
     artist: 'Synthwave Echoes',
     album: 'Cyber Odyssey (Royalty-Free)',
-    src: '/demo-assets/track1.wav',
-    artwork: '/demo-assets/cover1.svg',
+    src: track1,
+    artwork: cover1,
     duration: 12,
     lrc: `[00:00.00]Neon Horizon - Synthwave Echoes
 [00:02.00]Driving through the digital rain
@@ -29,8 +36,8 @@ export const DEMO_TRACKS: DemoTrackItem[] = [
     title: 'Morning Mist',
     artist: 'Lo-Fi Dreamer',
     album: 'Chill Beats at Dawn (Royalty-Free)',
-    src: '/demo-assets/track2.wav',
-    artwork: '/demo-assets/cover2.svg',
+    src: track2,
+    artwork: cover2,
     duration: 14,
     lrc: `[00:00.00]Morning Mist - Lo-Fi Dreamer
 [00:03.00]A quiet cup of coffee
@@ -43,8 +50,8 @@ export const DEMO_TRACKS: DemoTrackItem[] = [
     title: 'Starlight Serenade',
     artist: 'Cosmic Chimes',
     album: 'Astral Lullaby (Royalty-Free)',
-    src: '/demo-assets/track3.wav',
-    artwork: '/demo-assets/cover3.svg',
+    src: track3,
+    artwork: cover3,
     duration: 12,
     lrc: `[00:00.00]Starlight Serenade - Cosmic Chimes
 [00:02.50]Gazing at constellations above

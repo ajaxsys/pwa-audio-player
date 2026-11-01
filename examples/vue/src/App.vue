@@ -23,7 +23,7 @@ const modeIcons: Record<PlayMode, string> = {
 
 const currentTrack = computed(() => state.value.currentTrack);
 const isPlaying = computed(() => state.value.isPlaying);
-const isF3Holding = computed(() => state.value.isF3Holding);
+const isHolding = computed(() => state.value.isHolding);
 const currentTime = computed(() => state.value.currentTime);
 const duration = computed(() => state.value.duration);
 const queueIndex = computed(() => state.value.queueIndex);
@@ -66,10 +66,10 @@ function handleSeekClick(e: MouseEvent) {
 
     <div class="badge-container">
       <span class="badge active">
-        {{ platform.isIOS ? '📱 iOS Safari (F3 换源就绪)' : '💻 Desktop (原生 Pause)' }}
+        {{ platform.isIOS ? '📱 iOS Safari (单轨静音保活已就绪)' : '💻 桌面/Android (原生 Pause)' }}
       </span>
-      <span :class="['badge', isF3Holding ? 'holding' : '']">
-        {{ isF3Holding ? '🛡️ Mode F3: 静音保活中' : `状态: ${state.playbackState.toUpperCase()}` }}
+      <span :class="['badge', isHolding ? 'holding' : '']">
+        {{ isHolding ? '🛡️ 硬件保活: 静音保持中 (Silent-Hold)' : `状态: ${state.playbackState.toUpperCase()}` }}
       </span>
     </div>
 
