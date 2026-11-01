@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0b0f19" />
+    <title>PWA Player · 跨框架演示一览</title>
+    <style>
+      :root {
+        --bg-main: #0b0f19;
+        --card-bg: rgba(30, 41, 59, 0.65);
+        --accent: #6366f1;
+        --text: #f8fafc;
+        --text-sub: #94a3b8;
+        --border: rgba(255, 255, 255, 0.08);
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: radial-gradient(circle at 50% 15%, #1e1b4b, var(--bg-main) 70%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 16px 48px;
+      }
+      .container { width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 24px; }
+      
+      .hero { text-align: center; }
+      .badge-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 5px 12px;
+        border-radius: 9999px;
+        background: rgba(99, 102, 241, 0.15);
+        border: 1px solid rgba(99, 102, 241, 0.35);
+        color: #a5b4fc;
+        margin-bottom: 12px;
+      }
+      .hero h1 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
+      .hero p { font-size: 14px; color: var(--text-sub); margin-top: 6px; line-height: 1.5; }
+
+      .grid { display: grid; grid-template-columns: 1fr; gap: 14px; }
+      @media (min-width: 480px) {
+        .grid { grid-template-columns: 1fr 1fr; }
+      }
+
+      .demo-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .demo-card:hover, .demo-card:active {
+        transform: translateY(-2px);
+        border-color: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 12px 28px -8px rgba(99, 102, 241, 0.3);
+      }
+      .card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+      .icon-box {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+      }
+      .icon-vanilla { background: rgba(234, 179, 8, 0.15); border: 1px solid rgba(234, 179, 8, 0.3); }
+      .icon-react { background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); }
+      .icon-vue { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); }
+      .icon-svelte { background: rgba(249, 115, 22, 0.15); border: 1px solid rgba(249, 115, 22, 0.3); }
+
+      .port-tag {
+        font-size: 11px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-sub);
+      }
+
+      .card-info h3 { font-size: 17px; font-weight: 700; }
+      .card-info p { font-size: 12px; color: var(--text-sub); margin-top: 4px; line-height: 1.4; }
+
+      .card-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        font-weight: 600;
+        color: #a5b4fc;
+        padding-top: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .card-btn svg { transition: transform 0.2s ease; }
+      .demo-card:hover .card-btn svg { transform: translateX(3px); }
+
+      /* Feature Box */
+      .feature-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        font-size: 13px;
+        color: var(--text-sub);
+        line-height: 1.6;
+      }
+      .feature-card b { color: var(--text); }
+      .feature-card ul { padding-left: 20px; margin-top: 8px; }
+
+      .ip-banner {
+        text-align: center;
+        font-size: 12px;
+        color: #64748b;
+        font-family: ui-monospace, monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="hero">
+        <div class="badge-top">🎧 PWA Player Hub</div>
+        <h1>跨框架演示一览</h1>
+        <p>彻底根治 iOS WebKit 锁屏假走针死锁与 MediaSession 规范化引擎</p>
+      </div>
+
+      <div class="ip-banner">
+        当前访问节点: <span id="current-host" style="color:#94a3b8;">--</span>
+      </div>
+
+      <div class="grid">
+        <!-- Vanilla -->
+        <a id="link-vanilla" href="http://localhost:5173" class="demo-card">
+          <div class="card-top">
+            <div class="icon-box icon-vanilla">⚡</div>
+            <span class="port-tag">:5173</span>
+          </div>
+          <div class="card-info">
+            <h3>Vanilla TS</h3>
+            <p>纯原生 DOM / 零框架依赖，极简纯粹，展示核心 API 调用</p>
+          </div>
+          <div class="card-btn">
+            <span>进入原生演示</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- React -->
+        <a id="link-react" href="http://localhost:5174" class="demo-card">
+          <div class="card-top">
+            <div class="icon-box icon-react">⚛️</div>
+            <span class="port-tag">:5174</span>
+          </div>
+          <div class="card-info">
+            <h3>React 18 / 19</h3>
+            <p>提供优雅的 <code>usePwaPlayer()</code> 自定义 Hook，响应式精准重绘</p>
+          </div>
+          <div class="card-btn">
+            <span>进入 React 演示</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Vue -->
+        <a id="link-vue" href="http://localhost:5175" class="demo-card">
+          <div class="card-top">
+            <div class="icon-box icon-vue">💚</div>
+            <span class="port-tag">:5175</span>
+          </div>
+          <div class="card-info">
+            <h3>Vue 3</h3>
+            <p>组合式 API (Composable)，使用 <code>shallowRef</code> 极简状态直连</p>
+          </div>
+          <div class="card-btn">
+            <span>进入 Vue 演示</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Svelte -->
+        <a id="link-svelte" href="http://localhost:5176" class="demo-card">
+          <div class="card-top">
+            <div class="icon-box icon-svelte">🧡</div>
+            <span class="port-tag">:5176</span>
+          </div>
+          <div class="card-info">
+            <h3>Svelte 5</h3>
+            <p>全新 Runes (<code>$state</code>, <code>$derived</code>) 极简响应式，单例音频守护</p>
+          </div>
+          <div class="card-btn">
+            <span>进入 Svelte 演示</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+      </div>
+
+      <div class="feature-card">
+        <b>📱 手机 Safari / iOS PWA 核心测试要点：</b>
+        <ul>
+          <li><b>免版权自带音轨</b>：各 Demo 均内置 3 首约 12~14 秒无版权原创音乐，纯前端离线可用；</li>
+          <li><b>链式连播测试</b>：点击播放后锁屏，歌曲播完（12s）会自动平滑连播下一首（手势链不断裂）；</li>
+          <li><b>防假走针死锁测试</b>：锁屏暂停或按压 AirPods，手机熄屏黑屏<b>静置 20~30 秒</b>后再按播放，瞬时恢复出声！</li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      // Automatically map links to current hostname (supports LAN IP on mobile devices)
+      const host = window.location.hostname || 'localhost';
+      const protocol = window.location.protocol || 'http:';
+
+      document.getElementById('current-host').textContent = host + ':5170';
+
+      document.getElementById('link-vanilla').href = `${protocol}//${host}:5173`;
+      document.getElementById('link-react').href = `${protocol}//${host}:5174`;
+      document.getElementById('link-vue').href = `${protocol}//${host}:5175`;
+      document.getElementById('link-svelte').href = `${protocol}//${host}:5176`;
+    </script>
+  </body>
+</html>

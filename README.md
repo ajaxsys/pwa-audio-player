@@ -169,7 +169,10 @@ cd ~/dev/pwa-player
 # 1. 运行全部自动化单体测试
 pnpm test
 
-# 2. 运行对应的演示项目（控制台会直接打印终端二维码）：
+# 2. 一键并发启动全部框架 Demo 与主导航中心：
+pnpm dev:demos     # 启动导航中心 (5170) 及 4 大框架 Demo (5173~5176)
+
+# 3. 或单独启动某个框架 Demo：
 pnpm dev:vanilla   # 纯原生 TS Demo   -> http://localhost:5173
 pnpm dev:react     # React 18/19 Demo -> http://localhost:5174
 pnpm dev:vue       # Vue 3 Demo       -> http://localhost:5175

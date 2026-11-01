@@ -15,6 +15,18 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1(vite@5.4.21)
 
+  examples/hub:
+    devDependencies:
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vite:
+        specifier: ^5.2.0
+        version: 5.4.21
+      vite-plugin-qrcode:
+        specifier: ^0.4.1
+        version: 0.4.1(vite@5.4.21)
+
   examples/react:
     dependencies:
       '@pwa-player/core':
