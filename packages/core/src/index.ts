@@ -6,4 +6,7 @@ export * from './mediaSession';
 export * from './playlist';
 export * from './gesture';
 export * from './lyric';
+export * from './time';
+export * from './sleepTimer';
+export * from './storage';
 export * from './player';

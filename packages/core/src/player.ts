@@ -12,6 +12,7 @@ import { MediaSessionController } from './mediaSession';
 import { PlaylistManager } from './playlist';
 import { GestureGuardian } from './gesture';
 import { parseLrc, getActiveLyric } from './lyric';
+import { SleepTimerController } from './sleepTimer';
 
 // Active player instances registry for mutual-exclusion audio playback
 const activePlayers = new Set<PwaPlayer>();
@@ -22,6 +23,7 @@ export class PwaPlayer {
   private keepAlive: SilentHoldKeeper;
   private mediaSession: MediaSessionController;
   private gesture: GestureGuardian;
+  private sleepTimer: SleepTimerController;
 
   private isPlaying = false;
   private currentTime = 0;
@@ -59,6 +61,7 @@ export class PwaPlayer {
     );
 
     this.gesture = new GestureGuardian();
+    this.sleepTimer = new SleepTimerController(() => this.pause());
 
     this.keepAlive = new SilentHoldKeeper(
       this.audioEl,
@@ -309,6 +312,7 @@ export class PwaPlayer {
 
   public destroy(): void {
     activePlayers.delete(this);
+    this.sleepTimer.destroy();
     this.keepAlive.reset();
     this.gesture.clear();
     this.listeners.clear();
@@ -316,6 +320,10 @@ export class PwaPlayer {
       this.audioEl.pause();
       this.audioEl.src = '';
     } catch {}
+  }
+
+  public getSleepTimer(): SleepTimerController {
+    return this.sleepTimer;
   }
 
   // ================= Internal Mechanics =================
@@ -421,6 +429,7 @@ export class PwaPlayer {
 
     this.audioEl.addEventListener('timeupdate', () => {
       if (this.keepAlive.isHolding()) return;
+      if (this.sleepTimer.checkTick(() => this.pause())) return;
 
       this.currentTime = this.audioEl.currentTime;
       if (this.audioEl.duration && !isNaN(this.audioEl.duration) && isFinite(this.audioEl.duration)) {
@@ -461,6 +470,11 @@ export class PwaPlayer {
 
     this.audioEl.addEventListener('ended', () => {
       if (this.keepAlive.isHolding()) return;
+      if (this.sleepTimer.isEndOfTrack()) {
+        this.sleepTimer.cancelTimer();
+        this.pause();
+        return;
+      }
       // Seamless chain advance to next track
       this.next();
     });
