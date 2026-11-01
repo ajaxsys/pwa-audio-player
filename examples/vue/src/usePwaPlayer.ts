@@ -1,8 +1,13 @@
 import { shallowRef, onUnmounted } from 'vue';
 import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from '@pwa-player/core';
 
+let sharedPlayer: PwaPlayer | null = null;
+
 export function usePwaPlayer(options?: PwaPlayerOptions) {
-  const player = createPwaPlayer(options);
+  if (!sharedPlayer) {
+    sharedPlayer = createPwaPlayer(options);
+  }
+  const player = sharedPlayer;
   const state = shallowRef<PwaPlayerState>(player.getState());
 
   const unsubscribe = player.subscribe((newState) => {

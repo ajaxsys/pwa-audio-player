@@ -13,6 +13,9 @@ import { PlaylistManager } from './playlist';
 import { GestureGuardian } from './gesture';
 import { parseLrc, getActiveLyric } from './lyric';
 
+// Active player instances registry for mutual-exclusion audio playback
+const activePlayers = new Set<PwaPlayer>();
+
 export class PwaPlayer {
   private audioEl: HTMLAudioElement;
   private playlist: PlaylistManager;
@@ -103,11 +106,20 @@ export class PwaPlayer {
     if (initialTrack) {
       this.prepareTrack(initialTrack, false);
     }
+
+    activePlayers.add(this);
   }
 
   // ================= Public Playback Controls =================
 
   public async play(): Promise<void> {
+    // Enforce strict single-audio mutual exclusion across all instances
+    for (const other of activePlayers) {
+      if (other !== this && other.isPlaying) {
+        other.pause();
+      }
+    }
+
     if (this.keepAlive.isHolding()) {
       this.keepAlive.handleResume(() => {
         this.isPlaying = true;
@@ -297,6 +309,7 @@ export class PwaPlayer {
   }
 
   public destroy(): void {
+    activePlayers.delete(this);
     this.keepAlive.reset();
     this.gesture.clear();
     this.listeners.clear();

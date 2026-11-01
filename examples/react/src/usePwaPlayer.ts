@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
 import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState } from '@pwa-player/core';
 
+let sharedPlayer: PwaPlayer | null = null;
+
 export function usePwaPlayer(options?: PwaPlayerOptions) {
-  const [player] = useState(() => createPwaPlayer(options));
+  const [player] = useState(() => {
+    if (!sharedPlayer) {
+      sharedPlayer = createPwaPlayer(options);
+    }
+    return sharedPlayer;
+  });
   const [state, setState] = useState<PwaPlayerState>(() => player.getState());
 
   useEffect(() => {

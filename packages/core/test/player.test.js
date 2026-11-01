@@ -91,3 +91,33 @@ test('PwaPlayer - isolates ended and timeupdate events while in silent hold', as
   assert.equal(player.getState().isHolding, false);
   player.destroy();
 });
+
+test('PwaPlayer - enforces mutual exclusion so multiple instances never play simultaneously', async () => {
+  const env1 = setupMockDomEnv();
+  const env2 = setupMockDomEnv();
+
+  const player1 = new PwaPlayer({
+    audioElement: env1.mockAudio,
+    initialQueue: [{ id: 1, title: 'Track 1', src: '1.mp3', duration: 100 }],
+    initialIndex: 0
+  });
+
+  const player2 = new PwaPlayer({
+    audioElement: env2.mockAudio,
+    initialQueue: [{ id: 2, title: 'Track 2', src: '2.mp3', duration: 100 }],
+    initialIndex: 0
+  });
+
+  // Start player 1
+  await player1.play();
+  assert.equal(player1.getState().isPlaying, true);
+  assert.equal(player2.getState().isPlaying, false);
+
+  // Start player 2 -> player 1 MUST be paused automatically
+  await player2.play();
+  assert.equal(player2.getState().isPlaying, true);
+  assert.equal(player1.getState().isPlaying, false, 'Player 1 MUST be paused when Player 2 plays');
+
+  player1.destroy();
+  player2.destroy();
+});
