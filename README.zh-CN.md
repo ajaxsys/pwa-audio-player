@@ -138,6 +138,155 @@ const unsubscribe = player.subscribe((state) => {
 
 ---
 
+## 🧩 微模块工具链与独立开发配方 (Modular Recipes)
+
+不想使用开箱即用的整包播放器？`pwa-audio-player` 内部的所有底层原子能力**均支持独立导入与 Tree-Shaking**。你可以自由将其按需组装进已有的 React、Vue、Svelte、Redux、Pinia、Zustand 或自定义原生 `<audio>` 播放器体系中：
+
+### 1. ⏱️ 锁屏时钟防漂移睡眠定时器 (`SleepTimerController`)
+即使在 iOS 锁屏后台定时器被系统暴力节流的极端环境下，依然通过绝对时间戳与音频帧对齐校准，支持“播完当前歌曲后停止”与彻底释放硬件解码器。
+
+```typescript
+import { SleepTimerController } from 'pwa-audio-player';
+
+const timer = new SleepTimerController({
+  onTimerEnd: () => {
+    // 关机销毁保活并暂停释放硬件解码器
+    audioElement.pause();
+    console.log('定时已到，音频停止播放');
+  },
+  onTick: (remainingSeconds) => {
+    console.log(`剩余倒计时: ${remainingSeconds}秒`);
+  }
+});
+
+// 开启 30 分钟倒计时
+timer.setPreset(30);
+
+// 或开启“播完当前歌曲后自动停止”模式
+timer.setEndOfTrack(true);
+
+// 结合音频播放事件校准时钟，防止 iOS 锁屏后台休眠漂移
+audioElement.addEventListener('timeupdate', () => {
+  timer.checkTick();
+});
+```
+
+### 2. 🌐 Service Worker HTTP Range 206 切片响应 (`swAudio`)
+彻底攻克 Service Worker 拦截音频离线缓存后，iOS Safari 锁屏进度条拖拽无法 seek / 假死的系统级网络栈深坑：
+
+```javascript
+// 在你的 sw.js 中
+import { createPartialResponse, isAudioRequest } from 'pwa-audio-player';
+
+self.addEventListener('fetch', (event) => {
+  if (isAudioRequest(event.request.url)) {
+    event.respondWith((async () => {
+      const cache = await caches.open('my-audio-cache');
+      const cached = await cache.match(event.request);
+      if (cached) {
+        const rangeHeader = event.request.headers.get('Range');
+        // 自动基于 Blob.slice 构造包含 Content-Range 与 Accept-Ranges 的标准 206 响应
+        return createPartialResponse(cached, rangeHeader);
+      }
+      return fetch(event.request);
+    })());
+  }
+});
+```
+
+### 3. 💾 离线音频流缓存管理器 (`AudioCacheStorage`)
+基于浏览器标准 CacheStorage 的全功能音频离线管理器，包含存储配额容量探测与播放频次统计：
+
+```typescript
+import { AudioCacheStorage, queryStorageQuota } from 'pwa-audio-player';
+
+const audioCache = new AudioCacheStorage({
+  cacheName: 'app-audio-v1',
+  storageKeyPrefix: 'my_app_audio_'
+});
+
+// 将远程流异步持久化到浏览器 CacheStorage
+await audioCache.cacheTrack('track_101', 'https://cdn.example.com/song.mp3');
+
+// 查询某首曲目是否支持断网离线秒播
+const isAvailableOffline = await audioCache.isCached('track_101');
+
+// 查询浏览器当前已用容量与剩余配额
+const { usageMB, quotaMB, percent } = await queryStorageQuota();
+console.log(`缓存已用: ${usageMB}MB / ${quotaMB}MB (${percent}%)`);
+```
+
+### 4. 📜 游标安全队列状态机 (`PlaylistManager`)
+自带“下一首插播 (Play Next)”、拖拽调序、移除曲目并具备当前播放游标边界保护的队列状态机，附带纯函数 Fisher-Yates 洗牌：
+
+```typescript
+import { PlaylistManager, shuffleArray } from 'pwa-audio-player';
+
+const pm = new PlaylistManager(myTracks, 0, 'sequence');
+
+// 在当前正在播放的曲目后立即插播下一首
+pm.insertNext(newSong);
+
+// 将第 4 项移动到第 1 项，内部自动重定向当前曲目指针，保障播放不中断
+pm.move(4, 1);
+
+// 安全删除某一曲目（自动修正越界与游标前移）
+pm.remove(2);
+
+// 非破坏性无副作用数组乱序洗牌
+const shuffled = shuffleArray(myTracks);
+```
+
+### 5. 🎵 二分查找极速歌词解析器 (`parseLrc`, `getActiveLyric`)
+零 DOM、纯数学 $O(\log N)$ 歌词解析与二分检索器，完美应对拖拽进度条时的 60fps 密集刷新：
+
+```typescript
+import { parseLrc, getActiveLyric } from 'pwa-audio-player';
+
+const lyrics = parseLrc(`
+  [00:00.00]前奏
+  [00:15.5]单小数支持
+  [01:00.00][01:30.00]副歌重复两遍
+`);
+
+// 在 ontimeupdate 或 60fps rAF 中高频调用，仅需 ~7 次比较即刻命中
+const active = getActiveLyric(lyrics, currentAudioTime);
+console.log(active.currentText); // 当前行歌词
+console.log(active.nextText);    // 下一行预告
+console.log(active.index);       // 当前高亮行下标（供驱动列表滚动）
+```
+
+### 6. 🎨 封面像素级主辅色提取器 (`extractCoverPalette`)
+基于离屏 Canvas 像素量化与 HSL 饱和度过滤，自动为播放器背景生成高颜值自适应渐变主题：
+
+```typescript
+import { extractCoverPalette } from 'pwa-audio-player';
+
+const palette = await extractCoverPalette('https://example.com/cover.jpg');
+// {
+//   dominant: '#1a1f2c',
+//   accent: '#e24a4a',
+//   isDark: true,
+//   gradient: 'linear-gradient(135deg, #1a1f2c 0%, #0d1017 100%)'
+// }
+```
+
+### 7. 🎚️ 参数均衡器插值曲线引擎 (`calculatePeqCurve`)
+10 段 PEQ 样条插值计算引擎，内置多种常见声学听感预设（Rock, Pop, Jazz 等）：
+
+```typescript
+import { calculatePeqCurve, BUILTIN_PRESETS, INITIAL_BANDS } from 'pwa-audio-player';
+
+// 获取摇滚预设增益数组
+const bands = BUILTIN_PRESETS['Rock'];
+
+// 计算输出 128 个平滑插值点坐标，直接绑定给 SVG <path> 或 Canvas
+const points = calculatePeqCurve(bands, 128);
+```
+```
+
+---
+
 ## 📱 iOS 真机测试步骤
 
 1. iPhone Safari 中点击播放，按电源键进入锁屏状态；

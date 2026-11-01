@@ -136,6 +136,155 @@ const unsubscribe = player.subscribe((state) => {
 
 ---
 
+## 🧩 Modular Toolchain & Standalone Recipes
+
+Don't need the monolithic player? Every primitive in `pwa-audio-player` is **tree-shakeable** and can be integrated into your existing player architecture (React, Vue, Svelte, Redux, Zustand, Pinia, or vanilla audio elements):
+
+### 1. ⏱️ Drift-Free Sleep Timer (`SleepTimerController`)
+Maintains precise wall-clock countdowns even under aggressive iOS background timer throttling, with an "End of current track" mode and complete hardware resource release.
+
+```typescript
+import { SleepTimerController } from 'pwa-audio-player';
+
+const timer = new SleepTimerController({
+  onTimerEnd: () => {
+    // Teardown playback & release audio decoder
+    audioElement.pause();
+    console.log('Playback paused to save battery');
+  },
+  onTick: (remainingSeconds) => {
+    console.log(`Time remaining: ${remainingSeconds}s`);
+  }
+});
+
+// Set 30-minute timer
+timer.setPreset(30);
+
+// Or stop after the currently playing song finishes
+timer.setEndOfTrack(true);
+
+// Sync with playback updates to calibrate against background drift
+audioElement.addEventListener('timeupdate', () => {
+  timer.checkTick();
+});
+```
+
+### 2. 🌐 Service Worker Range 206 Stream Slicing (`swAudio`)
+Eliminates the iOS Safari lockscreen seek deadlock when serving cached audio through a Service Worker:
+
+```javascript
+// In your sw.js
+import { createPartialResponse, isAudioRequest } from 'pwa-audio-player';
+
+self.addEventListener('fetch', (event) => {
+  if (isAudioRequest(event.request.url)) {
+    event.respondWith((async () => {
+      const cache = await caches.open('my-audio-cache');
+      const cached = await cache.match(event.request);
+      if (cached) {
+        const rangeHeader = event.request.headers.get('Range');
+        // Synthesizes a valid 206 Partial Content Response with Content-Range headers
+        return createPartialResponse(cached, rangeHeader);
+      }
+      return fetch(event.request);
+    })());
+  }
+});
+```
+
+### 3. 💾 Offline Audio Cache Manager (`AudioCacheStorage`)
+A complete browser CacheStorage audio stream manager with storage quota detection and play count analytics:
+
+```typescript
+import { AudioCacheStorage, queryStorageQuota } from 'pwa-audio-player';
+
+const audioCache = new AudioCacheStorage({
+  cacheName: 'app-audio-v1',
+  storageKeyPrefix: 'my_app_audio_'
+});
+
+// Cache a remote audio stream for offline playback
+await audioCache.cacheTrack('track_101', 'https://cdn.example.com/song.mp3');
+
+// Check if cached
+const isAvailableOffline = await audioCache.isCached('track_101');
+
+// Query browser quota
+const { usageMB, quotaMB, percent } = await queryStorageQuota();
+console.log(`Cache usage: ${usageMB}MB / ${quotaMB}MB (${percent}%)`);
+```
+
+### 4. 📜 Deterministic Playlist Manager (`PlaylistManager`)
+A state machine for queues with "Play Next" (insert next), move, remove, and Fisher-Yates shuffle that protects the active cursor:
+
+```typescript
+import { PlaylistManager, shuffleArray } from 'pwa-audio-player';
+
+const pm = new PlaylistManager(myTracks, 0, 'sequence');
+
+// Insert a track immediately after the current song ("Play Next")
+pm.insertNext(newSong);
+
+// Move track from position 4 to 1 while keeping active playback pointer aligned
+pm.move(4, 1);
+
+// Remove track safely without skipping or boundary overflows
+pm.remove(2);
+
+// Non-mutating array shuffle
+const shuffled = shuffleArray(myTracks);
+```
+
+### 5. 🎵 High-Performance Binary-Search Lyric Engine (`parseLrc`, `getActiveLyric`)
+Zero-DOM, pure mathematical LRC parser that resolves the active lyric in $O(\log N)$ time, ideal for 60fps scrubbing:
+
+```typescript
+import { parseLrc, getActiveLyric } from 'pwa-audio-player';
+
+const lyrics = parseLrc(`
+  [00:00.00]First line
+  [00:15.50]Second line with single decimal
+  [01:00.00][01:30.00]Chorus line repeating twice
+`);
+
+// Call inside your 60fps rAF loop or audio ontimeupdate
+const active = getActiveLyric(lyrics, currentAudioTime);
+console.log(active.currentText); // Current line
+console.log(active.nextText);    // Upcoming line preview
+console.log(active.index);       // Active index for list scrolling
+```
+
+### 6. 🎨 Cover Art Color Palette Extractor (`extractCoverPalette`)
+Extracts dominant and accent colors from album artwork using in-memory Canvas pixel quantization for dynamic UI theming:
+
+```typescript
+import { extractCoverPalette } from 'pwa-audio-player';
+
+const palette = await extractCoverPalette('https://example.com/cover.jpg');
+// {
+//   dominant: '#1a1f2c',
+//   accent: '#e24a4a',
+//   isDark: true,
+//   gradient: 'linear-gradient(135deg, #1a1f2c 0%, #0d1017 100%)'
+// }
+```
+
+### 7. 🎚️ Parametric Equalizer Curve Engine (`calculatePeqCurve`)
+10-band spline interpolation curve calculator with built-in acoustic presets:
+
+```typescript
+import { calculatePeqCurve, BUILTIN_PRESETS, INITIAL_BANDS } from 'pwa-audio-player';
+
+// Apply 'Rock' preset
+const bands = BUILTIN_PRESETS['Rock'];
+
+// Generate 128 points for SVG/Canvas rendering
+const points = calculatePeqCurve(bands, 128);
+```
+```
+
+---
+
 ## 📱 iOS Testing Protocol
 
 1. Start music playback on iPhone Safari, then press the power button to lock the device.
