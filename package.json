@@ -6,6 +6,7 @@
   "scripts": {
     "build:core": "pnpm --filter pwa-audio-player build",
     "build:pages": "node scripts/build-pages.js",
+    "publish:npm": "pnpm build:core && pnpm --filter pwa-audio-player publish --access public --no-git-checks",
     "deploy:pages": "pnpm run build:pages && wrangler pages deploy dist-pages --project-name=pwa-audio-player --branch=main",
     "test": "pnpm build:core && node --test packages/core/test/*.test.js",
     "dev:demos": "node scripts/dev-demos.js",
