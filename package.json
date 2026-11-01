@@ -6,6 +6,7 @@
   "scripts": {
     "build:core": "pnpm --filter @pwa-player/core build",
     "build:pages": "node scripts/build-pages.js",
+    "deploy:pages": "pnpm run build:pages && wrangler pages deploy dist-pages --project-name=pwa-audio-player --branch=main",
     "test": "pnpm build:core && node --test packages/core/test/*.test.js",
     "dev:demos": "node scripts/dev-demos.js",
     "dev:hub": "pnpm --filter example-hub dev",
@@ -17,11 +18,13 @@
   "devDependencies": {
     "@types/node": "^26.6.6",
     "typescript": "^5.4.0",
-    "vite-plugin-qrcode": "^0.4.1"
+    "vite-plugin-qrcode": "^0.4.1",
+    "wrangler": "^4.156.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild"
+      "esbuild",
+      "workerd"
     ]
   }
 }
