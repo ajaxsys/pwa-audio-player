@@ -63,10 +63,10 @@
 
   <div class="badge-container">
     <span class="badge active">
-      {platform.isIOS ? '📱 iOS Safari (F3 换源就绪)' : '💻 Desktop (原生 Pause)'}
+      {platform.isIOS ? '📱 iOS Safari (单轨静音保活已就绪)' : '💻 桌面/Android (原生 Pause)'}
     </span>
-    <span class="badge {isF3Holding ? 'holding' : ''}">
-      {isF3Holding ? '🛡️ Mode F3: 静音保活中' : `状态: ${state.playbackState.toUpperCase()}`}
+    <span class="badge {isHolding ? 'holding' : ''}">
+      {isHolding ? '🛡️ 硬件保活: 静音保持中 (Silent-Hold)' : `状态: ${state.playbackState.toUpperCase()}`}
     </span>
   </div>
 

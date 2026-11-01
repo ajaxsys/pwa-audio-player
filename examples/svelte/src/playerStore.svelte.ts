@@ -1,7 +1,12 @@
-import { createPwaPlayer, type PwaPlayerOptions, type PwaPlayerState, type PlayMode } from '@pwa-player/core';
+import { createPwaPlayer, PwaPlayer, type PwaPlayerOptions, type PwaPlayerState, type PlayMode } from '@pwa-player/core';
+
+let sharedPlayer: PwaPlayer | null = null;
 
 export function createSveltePlayer(options?: PwaPlayerOptions) {
-  const player = createPwaPlayer(options);
+  if (!sharedPlayer) {
+    sharedPlayer = createPwaPlayer(options);
+  }
+  const player = sharedPlayer;
   let state = $state<PwaPlayerState>(player.getState());
 
   player.subscribe((newState) => {
