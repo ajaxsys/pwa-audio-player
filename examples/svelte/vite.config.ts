@@ -10,12 +10,12 @@ export default defineConfig({
     port: 5176,
     host: true,
     fs: {
-      allow: ['../..']
+      allow: ['..']
     }
   },
   resolve: {
     alias: {
-      '/demo-assets': path.resolve(__dirname, '../../demo-assets')
+      '/_assets': path.resolve(__dirname, '../_assets')
     }
   }
 });

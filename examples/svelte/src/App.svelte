@@ -1,9 +1,9 @@
 <script lang="ts">
   import { createSveltePlayer } from './playerStore.svelte';
   import { platform, type PlayMode } from '@pwa-player/core';
-  import { DEMO_TRACKS } from '../../../demo-assets/demoTracks';
-  import { DEMO_I18N, detectBrowserLang, savePreferredLang, type Lang } from '../../../demo-assets/i18n';
-  import '../../../demo-assets/player-shared.css';
+  import { DEMO_TRACKS } from '../../_assets/demoTracks';
+  import { DEMO_I18N, detectBrowserLang, savePreferredLang, type Lang } from '../../_assets/i18n';
+  import '../../_assets/player-shared.css';
 
   let currentLang = $state<Lang>(detectBrowserLang());
 
