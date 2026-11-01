@@ -74,3 +74,42 @@ test('PlaylistManager - handles empty queue gracefully', () => {
   assert.equal(pm.getNextIndex(), -1);
   assert.equal(pm.getPrevIndex(), -1);
 });
+
+test('PlaylistManager - insertNext inserts immediately following current cursor', () => {
+  const pm = new PlaylistManager([
+    { id: 1, title: 'Track 1' },
+    { id: 3, title: 'Track 3' }
+  ], 0, 'sequence');
+
+  pm.insertNext({ id: 2, title: 'Track 2' });
+  const queue = pm.getQueue();
+  assert.equal(queue.length, 3);
+  assert.equal(queue[0].title, 'Track 1');
+  assert.equal(queue[1].title, 'Track 2');
+  assert.equal(queue[2].title, 'Track 3');
+  assert.equal(pm.getCurrentIndex(), 0);
+});
+
+test('PlaylistManager - remove, move and clear operations with cursor protection', () => {
+  const pm = new PlaylistManager([
+    { id: 1, title: 'Track 1' },
+    { id: 2, title: 'Track 2' },
+    { id: 3, title: 'Track 3' }
+  ], 1, 'sequence'); // current = Track 2
+
+  // Move Track 1 to index 2: [Track 2, Track 3, Track 1]
+  const moved = pm.move(0, 2);
+  assert.equal(moved, true);
+  assert.equal(pm.getCurrentTrack().title, 'Track 2');
+  assert.equal(pm.getCurrentIndex(), 0);
+
+  // Remove Track 3 (at index 1)
+  const removed = pm.remove(1);
+  assert.equal(removed.title, 'Track 3');
+  assert.equal(pm.getQueue().length, 2);
+  assert.equal(pm.getCurrentTrack().title, 'Track 2');
+
+  pm.clear();
+  assert.equal(pm.getQueue().length, 0);
+  assert.equal(pm.getCurrentIndex(), 0);
+});

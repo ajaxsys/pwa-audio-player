@@ -1,13 +1,13 @@
 import type { Track, PlayMode } from './types';
 
-export class PlaylistManager {
-  private queue: Track[] = [];
+export class PlaylistManager<T extends Record<string, any> = Track> {
+  private queue: T[] = [];
   private currentIndex = 0;
   private playMode: PlayMode = 'sequence';
   private shuffleIndices: number[] = [];
   private shufflePointer = 0;
 
-  constructor(initialQueue: Track[] = [], initialIndex = 0, initialMode: PlayMode = 'sequence') {
+  constructor(initialQueue: T[] = [], initialIndex = 0, initialMode: PlayMode = 'sequence') {
     this.queue = [...initialQueue];
     this.currentIndex = Math.max(0, Math.min(initialIndex, this.queue.length - 1));
     this.playMode = initialMode;
@@ -16,7 +16,7 @@ export class PlaylistManager {
     }
   }
 
-  public getQueue(): Track[] {
+  public getQueue(): T[] {
     return [...this.queue];
   }
 
@@ -24,7 +24,7 @@ export class PlaylistManager {
     return this.currentIndex;
   }
 
-  public getCurrentTrack(): Track | null {
+  public getCurrentTrack(): T | null {
     if (this.currentIndex >= 0 && this.currentIndex < this.queue.length) {
       return this.queue[this.currentIndex];
     }
@@ -42,7 +42,7 @@ export class PlaylistManager {
     }
   }
 
-  public setQueue(tracks: Track[], startIndex = 0): void {
+  public setQueue(tracks: T[], startIndex = 0): void {
     this.queue = [...tracks];
     this.currentIndex = Math.max(0, Math.min(startIndex, this.queue.length - 1));
     if (this.playMode === 'shuffle') {
@@ -56,6 +56,91 @@ export class PlaylistManager {
       return true;
     }
     return false;
+  }
+
+  /**
+   * Insert track(s) immediately following the currently playing track ("Play Next" / 插播)
+   */
+  public insertNext(trackOrTracks: T | T[]): void {
+    const items = Array.isArray(trackOrTracks) ? trackOrTracks : [trackOrTracks];
+    if (!items.length) return;
+
+    if (this.queue.length === 0) {
+      this.queue = [...items];
+      this.currentIndex = 0;
+    } else {
+      const insertPos = this.currentIndex + 1;
+      this.queue.splice(insertPos, 0, ...items);
+    }
+
+    if (this.playMode === 'shuffle') {
+      this.rebuildShuffleOrder();
+    }
+  }
+
+  /**
+   * Append track(s) to the end of the queue
+   */
+  public append(trackOrTracks: T | T[]): void {
+    const items = Array.isArray(trackOrTracks) ? trackOrTracks : [trackOrTracks];
+    if (!items.length) return;
+
+    this.queue.push(...items);
+    if (this.playMode === 'shuffle') {
+      this.rebuildShuffleOrder();
+    }
+  }
+
+  /**
+   * Remove a track from queue by index with automatic cursor position correction
+   */
+  public remove(index: number): T | null {
+    if (index < 0 || index >= this.queue.length) return null;
+
+    const [removed] = this.queue.splice(index, 1);
+
+    if (this.queue.length === 0) {
+      this.currentIndex = 0;
+    } else if (index < this.currentIndex) {
+      this.currentIndex = Math.max(0, this.currentIndex - 1);
+    } else if (index === this.currentIndex) {
+      this.currentIndex = Math.min(this.currentIndex, this.queue.length - 1);
+    }
+
+    if (this.playMode === 'shuffle') {
+      this.rebuildShuffleOrder();
+    }
+    return removed;
+  }
+
+  /**
+   * Reorder/move a track within queue with automatic cursor protection
+   */
+  public move(fromIndex: number, toIndex: number): boolean {
+    if (
+      fromIndex < 0 ||
+      fromIndex >= this.queue.length ||
+      toIndex < 0 ||
+      toIndex >= this.queue.length ||
+      fromIndex === toIndex
+    ) {
+      return false;
+    }
+
+    const currentTrack = this.getCurrentTrack();
+    const [item] = this.queue.splice(fromIndex, 1);
+    this.queue.splice(toIndex, 0, item);
+
+    // Keep current track cursor stable
+    if (currentTrack) {
+      const newPos = this.queue.indexOf(currentTrack);
+      if (newPos >= 0) this.currentIndex = newPos;
+    }
+
+    if (this.playMode === 'shuffle') {
+      this.rebuildShuffleOrder();
+    }
+    return true;
   }
 
   public getNextIndex(): number {
@@ -94,7 +179,7 @@ export class PlaylistManager {
     return prev >= 0 ? prev : -1;
   }
 
-  public stepNext(): Track | null {
+  public stepNext(): T | null {
     const nextIdx = this.getNextIndex();
     if (nextIdx >= 0) {
       this.currentIndex = nextIdx;
@@ -106,7 +191,7 @@ export class PlaylistManager {
     return null;
   }
 
-  public stepPrev(): Track | null {
+  public stepPrev(): T | null {
     const prevIdx = this.getPrevIndex();
     if (prevIdx >= 0) {
       this.currentIndex = prevIdx;
@@ -120,6 +205,13 @@ export class PlaylistManager {
 
   public shuffle(): void {
     this.rebuildShuffleOrder();
+  }
+
+  public clear(): void {
+    this.queue = [];
+    this.currentIndex = 0;
+    this.shuffleIndices = [];
+    this.shufflePointer = 0;
   }
 
   private rebuildShuffleOrder(): void {
