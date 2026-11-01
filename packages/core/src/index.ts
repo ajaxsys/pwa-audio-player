@@ -12,5 +12,6 @@ export * from './storage';
 export * from './color';
 export * from './peq';
 export * from './cache';
+export * from './cacheStorage';
 export * from './pwa';
 export * from './player';
