@@ -75,6 +75,14 @@ export class SilentHoldKeeper {
     return this.savedPauseTime;
   }
 
+  public setHardPauseTimeoutMs(ms: number): void {
+    this.options.hardPauseTimeoutMs = ms;
+  }
+
+  public getHardPauseTimeoutMs(): number {
+    return this.options.hardPauseTimeoutMs;
+  }
+
   public updateSavedPauseTime(time: number): void {
     if (!this.holding) return;
     this.savedPauseTime = Math.max(0, this.savedDuration > 0 ? Math.min(time, this.savedDuration) : time);

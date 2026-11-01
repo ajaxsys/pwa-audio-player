@@ -28,8 +28,8 @@ export function detectPlatform(): PlatformDetection {
     (/AppleWebKit/i.test(ua) && !/Chrome|CriOS|FxiOS/i.test(ua));
 
   const isStandalone =
-    ('standalone' in window.navigator && Boolean((window.navigator as any).standalone)) ||
-    window.matchMedia('(display-mode: standalone)').matches;
+    (Boolean(window.navigator) && 'standalone' in window.navigator && Boolean((window.navigator as any).standalone)) ||
+    (typeof window.matchMedia === 'function' && Boolean(window.matchMedia('(display-mode: standalone)')?.matches));
 
   const supportsMediaSession = 'mediaSession' in navigator;
   const supportsAudioSession = 'audioSession' in navigator;

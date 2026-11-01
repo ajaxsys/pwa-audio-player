@@ -1,6 +1,6 @@
 {
   "name": "pwa-audio-player",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Universal PWA & Web audio player engine that eliminates iOS Safari lockscreen freeze-lock deadlocks and background stutters.",
   "type": "module",
   "main": "./dist/index.cjs",
