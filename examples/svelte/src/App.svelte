@@ -28,15 +28,15 @@
     enableLockscreenLyrics: true
   });
 
-  const state = $derived(playerStore.state);
-  const currentTrack = $derived(state.currentTrack);
-  const isPlaying = $derived(state.isPlaying);
-  const isHolding = $derived(state.isHolding);
-  const currentTime = $derived(state.currentTime);
-  const duration = $derived(state.duration);
-  const queueIndex = $derived(state.queueIndex);
-  const playMode = $derived(state.playMode);
-  const activeLyricText = $derived(state.activeLyricText);
+  const playerState = $derived(playerStore.state);
+  const currentTrack = $derived(playerState.currentTrack);
+  const isPlaying = $derived(playerState.isPlaying);
+  const isHolding = $derived(playerState.isHolding);
+  const currentTime = $derived(playerState.currentTime);
+  const duration = $derived(playerState.duration);
+  const queueIndex = $derived(playerState.queueIndex);
+  const playMode = $derived(playerState.playMode);
+  const activeLyricText = $derived(playerState.activeLyricText);
 
   const percent = $derived(duration > 0 ? (currentTime / duration) * 100 : 0);
 
@@ -117,7 +117,7 @@
     <span class="badge {isHolding ? 'holding' : ''}">
       {isHolding
         ? `🛡️ ${t.badgeSilentHold}`
-        : `${t.badgeStatus}: ${state.playbackState.toUpperCase()}`}
+        : `${t.badgeStatus}: ${playerState.playbackState.toUpperCase()}`}
     </span>
   </div>
 

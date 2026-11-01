@@ -71,7 +71,6 @@ test('PwaPlayer - isolates ended and timeupdate events while in silent hold', as
   // Pause under silent-hold strategy -> enters silent hold
   player.pause();
   assert.equal(player.getState().isHolding, true);
-  assert.equal(player.getState().isF3Holding, true);
   assert.equal(player.getState().playbackState, 'holding');
   assert.equal(mockAudio.loop, true);
 

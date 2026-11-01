@@ -24,7 +24,7 @@ export interface Track {
  * - 'buffering': Loading / awaiting audio buffer
  * - 'holding': In iOS silent-stream keep-alive hold (hardware PCM slot maintained, UI masked as paused)
  */
-export type PlaybackState = 'idle' | 'playing' | 'paused' | 'buffering' | 'holding' | 'f3-holding';
+export type PlaybackState = 'idle' | 'playing' | 'paused' | 'buffering' | 'holding';
 
 export type PlayMode = 'sequence' | 'loop' | 'single' | 'shuffle';
 
@@ -32,11 +32,11 @@ export interface KeepAliveOptions {
   /**
    * Keep-alive strategy for maintaining hardware audio decoding on iOS background/lockscreen:
    * - 'auto': Automatically activate silent-hold stream on iOS Safari / Standalone PWA, use native pause on other platforms.
-   * - 'silent-hold' (or 'f3'): Force silent-hold keep-alive across all platforms.
+   * - 'silent-hold': Force silent-hold keep-alive across all platforms.
    * - 'native': Always use native audio.pause() without keep-alive.
    * Default: 'auto'.
    */
-  strategy?: 'auto' | 'silent-hold' | 'f3' | 'native';
+  strategy?: 'auto' | 'silent-hold' | 'native';
 
   /**
    * Inactivity timeout in milliseconds before transitioning from silent hold
@@ -103,8 +103,6 @@ export interface PwaPlayerState {
   isPlaying: boolean;
   /** True when audio element is maintaining hardware playback pipeline via silent loop */
   isHolding: boolean;
-  /** Backward-compatible alias for isHolding */
-  isF3Holding: boolean;
   currentTime: number;
   duration: number;
   queue: Track[];

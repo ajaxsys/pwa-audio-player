@@ -27,7 +27,7 @@ const txtSubtitle = document.getElementById('txt-subtitle')!;
 
 const badgePlatform = document.getElementById('badge-platform')!;
 const badgeState = document.getElementById('badge-state')!;
-const badgeF3 = document.getElementById('badge-f3')!;
+const badgeKeepAlive = document.getElementById('badge-keepalive')!;
 
 const coverImg = document.getElementById('cover-img') as HTMLImageElement;
 const trackTitle = document.getElementById('track-title')!;
@@ -140,12 +140,12 @@ function updateStateDisplay(state: ReturnType<typeof player.getState>) {
 
   // KeepAlive Status Badge
   if (state.isHolding) {
-    badgeF3.textContent = `🛡️ ${t.badgeSilentHold}`;
-    badgeF3.className = 'badge holding';
+    badgeKeepAlive.textContent = `🛡️ ${t.badgeSilentHold}`;
+    badgeKeepAlive.className = 'badge holding';
     badgeState.textContent = `${t.badgeStatus}: SILENT-HOLD`;
   } else {
-    badgeF3.textContent = `🛡️ ${t.badgeStatus}: ${t.stateIdle}`;
-    badgeF3.className = 'badge';
+    badgeKeepAlive.textContent = `🛡️ ${t.badgeStatus}: ${t.stateIdle}`;
+    badgeKeepAlive.className = 'badge';
     badgeState.textContent = `${t.badgeStatus}: ${state.playbackState.toUpperCase()}`;
   }
 

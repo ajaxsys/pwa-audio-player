@@ -288,7 +288,6 @@ export class PwaPlayer {
       playbackState: this.getPlaybackState(),
       isPlaying: this.isPlaying,
       isHolding: isHold,
-      isF3Holding: isHold,
       currentTime: this.currentTime,
       duration: this.duration,
       queue: this.playlist.getQueue(),

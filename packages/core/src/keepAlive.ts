@@ -61,7 +61,7 @@ export class SilentHoldKeeper {
 
   public shouldActivateSilentHold(): boolean {
     const strat = this.options.strategy;
-    if (strat === 'silent-hold' || strat === 'f3') return true;
+    if (strat === 'silent-hold') return true;
     if (strat === 'native') return false;
     // 'auto' strategy: activate specifically on iOS Safari & Standalone PWA
     return platform.isIOS;
@@ -69,11 +69,6 @@ export class SilentHoldKeeper {
 
   public isHolding(): boolean {
     return this.holding;
-  }
-
-  /** Backward-compatible alias for isHolding */
-  public isF3Holding(): boolean {
-    return this.isHolding();
   }
 
   public getSavedPauseTime(): number {
@@ -226,6 +221,3 @@ export class SilentHoldKeeper {
     }
   }
 }
-
-/** Backward-compatible export alias */
-export const ModeF3Controller = SilentHoldKeeper;
