@@ -9,6 +9,7 @@ export interface HubTranslations {
   reactDesc: string;
   vueDesc: string;
   svelteDesc: string;
+  wcoDesc: string;
   btnEnter: string;
   testingGuideTitle: string;
   guideItem1Title: string;
@@ -55,6 +56,7 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     reactDesc: '优雅的 usePwaPlayer Hook，响应式精准重绘与无缝状态流',
     vueDesc: '组合式 API 深度调优，基于 shallowRef 实现轻量直连',
     svelteDesc: '全新 Svelte 5 Runes ($state, $derived) 极致精简与单例守护',
+    wcoDesc: '可安装桌面 WCO PWA 试验场：自由测试背景色、全屏图片/视频取色与多层 Modal 顶角融合',
     btnEnter: '进入演示',
     testingGuideTitle: 'iOS PWA 核心验证指南',
     guideItem1Title: '免版权试听音轨',
@@ -76,6 +78,7 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     reactDesc: 'Elegant usePwaPlayer Hook with fine-grained reactive state flow',
     vueDesc: 'Composition API optimized with shallowRef for lightweight direct binding',
     svelteDesc: 'Svelte 5 Runes ($state, $derived) with singleton audio guardian',
+    wcoDesc: 'Installable desktop WCO PWA lab: test dynamic background colors, media top-edge sampling & stacked modals',
     btnEnter: 'Open Demo',
     testingGuideTitle: 'iOS PWA Testing Protocol',
     guideItem1Title: 'Built-in Royalty-Free Tracks',
@@ -97,6 +100,7 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     reactDesc: 'usePwaPlayer カスタムフックによる、無駄のないリアクティブな状態制御',
     vueDesc: 'Vue 3 Composition API 対応。shallowRef を用いた軽量バインディング',
     svelteDesc: 'Svelte 5 Runes（$state / $derived）による軽快な状態同期と単一オーディオ保護',
+    wcoDesc: 'デスクトップ PWA (WCO) 実験場：背景色・全画面画像/動画の自動配色・多層モーダルを即座に検証',
     btnEnter: 'デモを開く',
     testingGuideTitle: 'iOS PWA 動作検証ステップ',
     guideItem1Title: '動作確認用フリー音源',

@@ -41,6 +41,10 @@
         --theme-svelte-accent: #ea580c;
         --theme-svelte-glow: rgba(234, 88, 12, 0.15);
         --theme-svelte-border: rgba(234, 88, 12, 0.35);
+
+        --theme-wco-accent: #8b5cf6;
+        --theme-wco-glow: rgba(139, 92, 246, 0.16);
+        --theme-wco-border: rgba(139, 92, 246, 0.38);
       }
 
       * {
@@ -404,6 +408,31 @@
         color: #fdba74;
       }
 
+      /* WCO Corner Lab */
+      .card-wco {
+        border-color: rgba(139, 92, 246, 0.24);
+        grid-column: 1 / -1;
+      }
+      .card-wco:hover {
+        transform: translateY(-2px);
+        background: var(--bg-panel-hover);
+        border-color: var(--theme-wco-border);
+        box-shadow: 0 10px 28px -8px var(--theme-wco-glow);
+      }
+      .card-wco .framework-icon {
+        color: var(--theme-wco-accent);
+        border-color: rgba(139, 92, 246, 0.32);
+        background: rgba(139, 92, 246, 0.1);
+      }
+      .card-wco .port-tag {
+        color: #ddd6fe;
+        background: rgba(139, 92, 246, 0.12);
+        border-color: rgba(139, 92, 246, 0.24);
+      }
+      .card-wco .card-action {
+        color: #ddd6fe;
+      }
+
       .card-top {
         display: flex;
         align-items: flex-start;
@@ -648,6 +677,22 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </div>
         </a>
+
+        <!-- WCO Corner Lab (Violet, Full-Width Installable Desktop PWA Playground) -->
+        <a id="link-wco" href="http://localhost:5177" class="demo-card card-wco">
+          <div class="card-top">
+            <div class="framework-icon">🪟</div>
+            <span class="port-tag">PWA · :5177</span>
+          </div>
+          <div class="card-info">
+            <h3>WCO Corner Lab (Desktop PWA)</h3>
+            <p id="txt-wco-desc">可安装桌面 WCO PWA 试验场：自由测试背景色、全屏图片/视频取色与多层 Modal 顶角融合</p>
+          </div>
+          <div class="card-action">
+            <span class="txt-btn-enter">进入演示</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
       </div>
 
       <!-- Verification Protocol Card -->
@@ -713,12 +758,14 @@
         document.getElementById('link-react').href = `${protocol}//${host}:5174`;
         document.getElementById('link-vue').href = `${protocol}//${host}:5175`;
         document.getElementById('link-svelte').href = `${protocol}//${host}:5176`;
+        document.getElementById('link-wco').href = `${protocol}//${host}:5177`;
       } else {
         document.getElementById('current-host').textContent = window.location.host;
         document.getElementById('link-vanilla').href = './vanilla/';
         document.getElementById('link-react').href = './react/';
         document.getElementById('link-vue').href = './vue/';
         document.getElementById('link-svelte').href = './svelte/';
+        document.getElementById('link-wco').href = './wco-corner/';
       }
 
       function applyLang(lang) {
@@ -733,6 +780,7 @@
         document.getElementById('txt-react-desc').textContent = t.reactDesc;
         document.getElementById('txt-vue-desc').textContent = t.vueDesc;
         document.getElementById('txt-svelte-desc').textContent = t.svelteDesc;
+        document.getElementById('txt-wco-desc').textContent = t.wcoDesc;
 
         document.querySelectorAll('.txt-btn-enter').forEach(el => {
           el.textContent = t.btnEnter;

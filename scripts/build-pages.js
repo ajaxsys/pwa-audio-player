@@ -22,8 +22,11 @@ execSync('pnpm --filter example-react build', { stdio: 'inherit' });
 console.log('\n💚 [5/6] 构建 example-vue...');
 execSync('pnpm --filter example-vue build', { stdio: 'inherit' });
 
-console.log('\n🧡 [6/6] 构建 example-svelte...');
+console.log('\n🧡 [6/7] 构建 example-svelte...');
 execSync('pnpm --filter example-svelte build', { stdio: 'inherit' });
+
+console.log('\n🪟 [7/7] 构建 example-wco-corner...');
+execSync('pnpm --filter example-wco-corner build', { stdio: 'inherit' });
 
 // 4. 创建发布聚合根目录 dist-pages
 const outDir = path.resolve('dist-pages');
@@ -40,12 +43,14 @@ fs.cpSync('examples/vanilla/dist', path.join(outDir, 'vanilla'), { recursive: tr
 fs.cpSync('examples/react/dist', path.join(outDir, 'react'), { recursive: true });
 fs.cpSync('examples/vue/dist', path.join(outDir, 'vue'), { recursive: true });
 fs.cpSync('examples/svelte/dist', path.join(outDir, 'svelte'), { recursive: true });
+fs.cpSync('examples/wco-corner/dist', path.join(outDir, 'wco-corner'), { recursive: true });
 
 console.log('\n✨ 打包聚合完成！');
 console.log(`📂 发布目录: ${outDir}`);
 console.log('🔗 结构:');
-console.log('  /           -> Hub 导航中心 (index.html)');
-console.log('  /vanilla/   -> Vanilla TS Demo (index.html)');
-console.log('  /react/     -> React Demo (index.html)');
-console.log('  /vue/       -> Vue 3 Demo (index.html)');
-console.log('  /svelte/    -> Svelte 5 Demo (index.html)');
+console.log('  /             -> Hub 导航中心 (index.html)');
+console.log('  /vanilla/     -> Vanilla TS Demo (index.html)');
+console.log('  /react/       -> React Demo (index.html)');
+console.log('  /vue/         -> Vue 3 Demo (index.html)');
+console.log('  /svelte/      -> Svelte 5 Demo (index.html)');
+console.log('  /wco-corner/  -> WCO Corner Lab PWA Demo (index.html)');

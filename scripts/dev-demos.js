@@ -11,7 +11,8 @@ const services = [
   { name: 'Vanilla   ', filter: 'example-vanilla', port: 5173, color: '\x1b[33m' },
   { name: 'React     ', filter: 'example-react', port: 5174, color: '\x1b[34m' },
   { name: 'Vue       ', filter: 'example-vue', port: 5175, color: '\x1b[32m' },
-  { name: 'Svelte    ', filter: 'example-svelte', port: 5176, color: '\x1b[35m' }
+  { name: 'Svelte    ', filter: 'example-svelte', port: 5176, color: '\x1b[35m' },
+  { name: 'WCO Lab   ', filter: 'example-wco-corner', port: 5177, color: '\x1b[36m' }
 ];
 
 console.log('\n\x1b[1m\x1b[35m🎧 PWA Player · Multi-Framework Playground Launching...\x1b[0m\n');
@@ -64,6 +65,7 @@ console.log('\x1b[1m🌐 统一导航主入口 (Hub Portal):\x1b[0m \x1b[36m\x1b
 console.log('   - ⚡ Vanilla TS:  http://localhost:5173/');
 console.log('   - ⚛️ React 18/19: http://localhost:5174/');
 console.log('   - 💚 Vue 3:       http://localhost:5175/');
-console.log('   - 🧡 Svelte 5:    http://localhost:5176/\n');
+console.log('   - 🧡 Svelte 5:    http://localhost:5176/');
+console.log('   - 🪟 WCO Lab:     http://localhost:5177/\n');
 console.log('\x1b[90m(打开 http://localhost:5170 或手机扫码即可直接看到 4 大框架的卡片一览并自由跳转)\x1b[0m');
 console.log('\x1b[90m(按 Ctrl+C 可一键同时终止所有服务)\x1b[0m\n');
