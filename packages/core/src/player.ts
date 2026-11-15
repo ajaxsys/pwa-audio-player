@@ -797,10 +797,8 @@ export class PwaPlayer {
         this.audioEl.duration && !isNaN(this.audioEl.duration) && isFinite(this.audioEl.duration)
           ? this.audioEl.duration
           : this.duration;
-      const nearEnd = Boolean(this.audioEl.ended || (dur > 1 && curTime >= dur - 0.8));
 
-      if (!this.interruption || nearEnd || !this.isPlaying) {
-        this.interruption?.consumeIntentionalPause();
+      if (!this.interruption) {
         this.isPlaying = false;
         this.mediaSession.updatePlaybackState('paused');
         this.mediaSession.updatePosition(curTime, dur);
@@ -813,6 +811,7 @@ export class PwaPlayer {
         audioEl: this.audioEl,
         wasPlaying,
         curTime,
+        duration: dur,
         trackId: track?.id ?? null,
         onSyncPaused: () => {
           this.isPlaying = false;

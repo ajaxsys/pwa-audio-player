@@ -527,17 +527,25 @@ export class InterruptionRecoveryController {
     audioEl: HTMLAudioElement;
     wasPlaying: boolean;
     curTime: number;
+    duration?: number;
     trackId: string | number | null | undefined;
     onSyncPaused: () => void;
     onRecovered: () => void;
     onGiveUp: () => void;
   }): void {
-    const { audioEl, wasPlaying, curTime, trackId, onSyncPaused, onRecovered, onGiveUp } = options;
-    if (this.consumeIntentionalPause() || !wasPlaying) {
+    const { audioEl, wasPlaying, curTime, duration, trackId, onSyncPaused, onRecovered, onGiveUp } = options;
+    const effCur = audioEl.currentTime > 0 ? audioEl.currentTime : curTime;
+    const effDur =
+      audioEl.duration && !isNaN(audioEl.duration) && isFinite(audioEl.duration)
+        ? audioEl.duration
+        : (duration || 0);
+    const nearEnd = Boolean(audioEl.ended || (effDur > 1 && effCur >= effDur - 0.8));
+
+    if (this.consumeIntentionalPause() || !wasPlaying || nearEnd) {
       onSyncPaused();
       return;
     }
-    this.handleUnexpectedPause(audioEl, curTime, trackId, onRecovered, onGiveUp);
+    this.handleUnexpectedPause(audioEl, effCur, trackId, onRecovered, onGiveUp);
   }
 }
 

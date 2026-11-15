@@ -228,3 +228,25 @@ test('bindAndPlayWithWatchdog handles watchdog timeout and routes play rejection
   await new Promise((r) => setTimeout(r, 45));
   assert.equal(timedOut, true);
 });
+
+test('dispatchPauseEvent suppresses interruption recovery near end of track', () => {
+  const controller = new InterruptionRecoveryController({ probeDelaysMs: [20] });
+  const audioEl = createFakeAudio(true);
+  audioEl.duration = 200;
+  audioEl.currentTime = 199.5;
+
+  let syncedPaused = false;
+  controller.dispatchPauseEvent({
+    audioEl,
+    wasPlaying: true,
+    curTime: 199.5,
+    duration: 200,
+    trackId: 'ending-track',
+    onSyncPaused: () => { syncedPaused = true; },
+    onRecovered: () => {},
+    onGiveUp: () => {}
+  });
+
+  assert.equal(syncedPaused, true);
+  assert.equal(controller.isInterrupted(), false);
+});
