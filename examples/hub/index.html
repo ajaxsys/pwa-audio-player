@@ -544,13 +544,13 @@
             <div class="badge-brand-dot"></div>
             <span id="txt-badge">PWA Player · 全框架套件</span>
           </div>
-          <a href="https://github.com/ajaxsys/pwa-audio-player/releases/tag/v1.1.0"
+          <a href="https://github.com/ajaxsys/pwa-audio-player/releases/tag/v1.2.0"
              target="_blank"
              rel="noopener noreferrer"
              class="badge-version"
-             title="GitHub Release v1.1.0">
+             title="GitHub Release v1.2.0">
             <span class="badge-version-dot"></span>
-            <span>v1.1.0</span>
+            <span>v1.2.0</span>
           </a>
         </div>
         <div class="top-actions">
@@ -678,13 +678,20 @@
               <p id="txt-g3-desc">锁屏暂停静置 20~30 秒待硬件进入深度休眠，轻点即可瞬时复播，彻底消除假走针。</p>
             </div>
           </div>
+          <div class="protocol-item">
+            <div class="protocol-num">04</div>
+            <div class="protocol-content">
+              <strong id="txt-g4-title">次曲预缓存与断点自愈</strong>
+              <p id="txt-g4-desc">播放中静默预读下一曲写入 CacheStorage 内存 blob；被导航或来电打断后自动探测恢复，坏链自动跳过。</p>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="footer-quiet">
         <p id="txt-footer-note">基于 W3C MediaSession 标准与 Web Audio API</p>
         <div class="footer-meta">
-          <span>pwa-audio-player v1.1.0</span>
+          <span>pwa-audio-player v1.2.0</span>
           <span>·</span>
           <a href="https://github.com/ajaxsys/pwa-audio-player" target="_blank" rel="noopener noreferrer">GitHub</a>
           <span>·</span>
@@ -738,6 +745,8 @@
         document.getElementById('txt-g2-desc').textContent = t.guideItem2Desc;
         document.getElementById('txt-g3-title').textContent = t.guideItem3Title;
         document.getElementById('txt-g3-desc').textContent = t.guideItem3Desc;
+        document.getElementById('txt-g4-title').textContent = t.guideItem4Title;
+        document.getElementById('txt-g4-desc').textContent = t.guideItem4Desc;
         document.getElementById('txt-footer-note').textContent = t.footerNote;
 
         document.querySelectorAll('.lang-btn').forEach(btn => {

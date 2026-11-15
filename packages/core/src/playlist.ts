@@ -203,6 +203,91 @@ export class PlaylistManager<T extends Record<string, any> = Track> {
     return null;
   }
 
+  /**
+   * Non-mutating lookahead returning up to `maxCount` upcoming queue indices
+   * respecting current playMode (returns empty for `'single'`).
+   */
+  public peekNextIndices(maxCount = 4): number[] {
+    const len = this.queue.length;
+    if (len <= 1 || this.playMode === 'single' || maxCount <= 0) return [];
+
+    const result: number[] = [];
+    if (this.playMode === 'shuffle') {
+      if (this.shuffleIndices.length === 0) this.rebuildShuffleOrder();
+      const total = Math.min(maxCount, Math.max(0, this.shuffleIndices.length - 1));
+      for (let offset = 1; offset <= total; offset++) {
+        result.push(this.shuffleIndices[(this.shufflePointer + offset) % this.shuffleIndices.length]);
+      }
+      return result;
+    }
+
+    if (this.playMode === 'loop') {
+      const total = Math.min(maxCount, len - 1);
+      for (let offset = 1; offset <= total; offset++) {
+        result.push((this.currentIndex + offset) % len);
+      }
+      return result;
+    }
+
+    // 'sequence'
+    for (let idx = this.currentIndex + 1; idx < len && result.length < maxCount; idx++) {
+      result.push(idx);
+    }
+    return result;
+  }
+
+  /**
+   * Advances to the next track matching `isPlayable`, bounding wraps to one full pass.
+   */
+  public stepNextPlayable(
+    isPlayable: (track: T) => boolean = (track) => !(track as any)?.unplayable
+  ): T | null {
+    const len = this.queue.length;
+    if (len === 0) return null;
+
+    if (this.playMode === 'single') {
+      const cur = this.getCurrentTrack();
+      return cur && isPlayable(cur) ? cur : null;
+    }
+
+    if (this.playMode === 'shuffle') {
+      if (this.shuffleIndices.length === 0) this.rebuildShuffleOrder();
+      for (let offset = 1; offset <= this.shuffleIndices.length; offset++) {
+        const ptr = (this.shufflePointer + offset) % this.shuffleIndices.length;
+        const idx = this.shuffleIndices[ptr];
+        const cand = this.queue[idx];
+        if (cand && isPlayable(cand)) {
+          this.shufflePointer = ptr;
+          this.currentIndex = idx;
+          return cand;
+        }
+      }
+      return null;
+    }
+
+    if (this.playMode === 'loop') {
+      for (let offset = 1; offset <= len; offset++) {
+        const idx = (this.currentIndex + offset) % len;
+        const cand = this.queue[idx];
+        if (cand && isPlayable(cand)) {
+          this.currentIndex = idx;
+          return cand;
+        }
+      }
+      return null;
+    }
+
+    // 'sequence'
+    for (let idx = this.currentIndex + 1; idx < len; idx++) {
+      const cand = this.queue[idx];
+      if (cand && isPlayable(cand)) {
+        this.currentIndex = idx;
+        return cand;
+      }
+    }
+    return null;
+  }
+
   public shuffle(): void {
     this.rebuildShuffleOrder();
   }

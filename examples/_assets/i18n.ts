@@ -17,6 +17,8 @@ export interface HubTranslations {
   guideItem2Desc: string;
   guideItem3Title: string;
   guideItem3Desc: string;
+  guideItem4Title: string;
+  guideItem4Desc: string;
   footerNote: string;
 }
 
@@ -26,6 +28,8 @@ export interface DemoTranslations {
   badgeIosReady: string;
   badgeDesktop: string;
   badgeSilentHold: string;
+  badgeRecovering: string;
+  badgePrecached: string;
   badgeStatus: string;
   stateIdle: string;
   lyricDefault: string;
@@ -37,6 +41,7 @@ export interface DemoTranslations {
   guideStep3: string;
   guideStep4: string;
   guideStep5: string;
+  guideStep6: string;
   backToHub: string;
 }
 
@@ -58,6 +63,8 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     guideItem2Desc: '点击播放后关闭屏幕，首曲播完后无感自动切歌，用户激活链长效保持。',
     guideItem3Title: '静音硬件保活 (Silent-Hold)',
     guideItem3Desc: '锁屏暂停静置 20~30 秒待硬件进入深度休眠，轻点即可瞬时复播，彻底消除假走针。',
+    guideItem4Title: '次曲预缓存与断点自愈',
+    guideItem4Desc: '播放中静默预读下一曲写入 CacheStorage 内存 blob；被导航或来电打断后自动探测恢复，坏链自动跳过。',
     footerNote: '基于 W3C MediaSession 标准与 Web Audio API'
   },
   en: {
@@ -77,6 +84,8 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     guideItem2Desc: 'Press play and lock screen. Seamless auto-advancement maintains activation chain.',
     guideItem3Title: 'Hardware Silent-Hold',
     guideItem3Desc: 'Pause on lockscreen and wait 20~30s during sleep. Instant recovery without freeze.',
+    guideItem4Title: 'Next-Track Precache & Focus Recovery',
+    guideItem4Desc: 'Pre-stages the next track into CacheStorage blob memory while playing, recovers from OS interruptions, and skips broken streams.',
     footerNote: 'Built on W3C MediaSession standard & Web Audio API'
   },
   ja: {
@@ -96,6 +105,8 @@ export const HUB_I18N: Record<Lang, HubTranslations> = {
     guideItem2Desc: '再生中に画面をロックしても、曲が終わると自動で次の曲へスムーズに遷移します。',
     guideItem3Title: '無音キープ（Silent-Hold）機能',
     guideItem3Desc: 'ロック画面で一時停止後、端末が完全スリープ（20〜30秒）に入っても、タップひとつで即座に再生が再開します。',
+    guideItem4Title: '次曲プリキャッシュ & 自動復帰',
+    guideItem4Desc: '再生中に次曲を CacheStorage とメモリ blob へ先読みし、ナビ音声や通話割り込み後の自動復帰とエラー曲スキップを行います。',
     footerNote: 'W3C MediaSession 標準仕様 & Web Audio API 準拠'
   }
 };
@@ -107,6 +118,8 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     badgeIosReady: 'iOS Safari (单轨静音保活)',
     badgeDesktop: '桌面 / Android (原生 Pause)',
     badgeSilentHold: '硬件保活: 静音保持中',
+    badgeRecovering: '音频焦点恢复中',
+    badgePrecached: '下一曲已预缓存',
     badgeStatus: '状态',
     stateIdle: '就绪',
     lyricDefault: '♪ 沉浸式锁屏歌词同步 ♪',
@@ -117,7 +130,8 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     guideStep2: '锁屏卡片可查看封面、歌词与标准切歌按键；',
     guideStep3: '锁屏点【暂停】或按压 AirPods，静置 20~30 秒使硬件进入休眠；',
     guideStep4: '再次轻点【播放】：毫秒级瞬时出声恢复，彻底消除假走针死锁；',
-    guideStep5: '让 12 秒歌曲自然播完，验证熄屏下链式自动连播。',
+    guideStep5: '让 12 秒歌曲自然播完，验证熄屏下链式自动连播；',
+    guideStep6: '播放时留意「下一曲已预缓存」徽标，并可测试语音播报/切后台打断后的自动复播。',
     backToHub: '← 返回导航总览'
   },
   en: {
@@ -126,6 +140,8 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     badgeIosReady: 'iOS Safari (Silent-Hold Active)',
     badgeDesktop: 'Desktop / Android (Standard Pause)',
     badgeSilentHold: 'Keep-Alive: Silent-Holding',
+    badgeRecovering: 'Recovering Audio Focus',
+    badgePrecached: 'Next Track Precached',
     badgeStatus: 'Status',
     stateIdle: 'READY',
     lyricDefault: '♪ Lockscreen Lyric Sync ♪',
@@ -136,7 +152,8 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     guideStep2: 'Inspect lockscreen artwork, synchronized lyrics, and track controls;',
     guideStep3: 'Press Pause or tap AirPods, wait 20~30s for device deep sleep;',
     guideStep4: 'Tap Play again: instant audio resume with zero deadlock or position desync;',
-    guideStep5: 'Allow the short track to finish naturally to test seamless auto-advance.',
+    guideStep5: 'Allow the short track to finish naturally to test seamless auto-advance;',
+    guideStep6: 'Watch the "Next Track Precached" badge during playback and verify automatic resume after OS interruptions.',
     backToHub: '← Hub Overview'
   },
   ja: {
@@ -145,6 +162,8 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     badgeIosReady: 'iOS Safari（無音キープ有効）',
     badgeDesktop: 'PC / Android（通常一時停止）',
     badgeSilentHold: 'バックグラウンド保持中',
+    badgeRecovering: 'フォーカス復帰中',
+    badgePrecached: '次曲プリキャッシュ済',
     badgeStatus: '状態',
     stateIdle: '待機中',
     lyricDefault: '♪ ロック画面 歌詞同期対応 ♪',
@@ -156,6 +175,7 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     guideStep3: 'ロック画面やAirPodsで一時停止し、20〜30秒ほど待って深いスリープに入れます。',
     guideStep4: '再度再生ボタンを押すと、秒針が固まることなく即座に音が鳴り始めます。',
     guideStep5: '曲が終了した際、画面が消灯したまま次の曲へ自動で進むことを確認してください。',
+    guideStep6: '再生中に「次曲プリキャッシュ済」表示を確認し、音声割り込み後の自動再生復帰も検証できます。',
     backToHub: '← デモ一覧へ戻る'
   }
 };

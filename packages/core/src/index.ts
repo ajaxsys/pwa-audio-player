@@ -16,3 +16,5 @@ export * from './cacheStorage';
 export * from './pwa';
 export * from './player';
 export * from './sw';
+export * from './resilience';
+export * from './precache';

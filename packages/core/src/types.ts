@@ -4,6 +4,9 @@ export interface MediaImage {
   type?: string;
 }
 
+import type { InterruptionRecoveryOptions } from './resilience';
+import type { NextTrackPrecacheOptions } from './precache';
+
 export interface Track {
   id: string | number;
   title: string;
@@ -90,6 +93,29 @@ export interface PwaPlayerOptions {
    * Initial play mode. Default: 'sequence'.
    */
   initialMode?: PlayMode;
+  /**
+   * Automatic interruption recovery for OS focus drops (navigation prompts, calls, Siri).
+   * Enabled by default; pass `false` to disable or pass custom timing/TTL options.
+   */
+  interruptionRecovery?: boolean | InterruptionRecoveryOptions;
+  /**
+   * Pre-download and CacheStorage-stage the upcoming track into an in-memory `blob:` URL
+   * while the current track plays. Defaults to `true`.
+   */
+  precacheNext?: boolean | NextTrackPrecacheOptions;
+  /**
+   * Stream startup watchdog timeout (ms) before retrying or skipping a stalled stream. Defaults to `12000` (`0` disables).
+   */
+  streamWatchdogMs?: number;
+  /**
+   * Optional async hook to resolve or refresh an expired/failed track URL before giving up.
+   */
+  resolveTrackUrl?: (track: Track, reason: 'expired' | 'error' | 'watchdog') => Promise<string | null | undefined>;
+  /**
+   * Automatically advance to the next playable track if the current stream fails to start or errors out.
+   * Defaults to `true`.
+   */
+  autoSkipOnError?: boolean;
 }
 
 export interface LyricLine {
@@ -111,6 +137,10 @@ export interface PwaPlayerState {
   volume: number;
   activeLyricIndex: number;
   activeLyricText: string;
+  /** True while interruption recovery is actively probing OS audio focus return */
+  isInterrupted: boolean;
+  /** True when the upcoming track in the queue has been pre-cached into a ready blob URL */
+  isNextPrecached: boolean;
 }
 
 export type PlayerListener = (state: PwaPlayerState) => void;

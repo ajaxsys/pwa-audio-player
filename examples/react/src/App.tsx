@@ -32,7 +32,7 @@ export default function App() {
     enableLockscreenLyrics: true
   });
 
-  const { currentTrack, isPlaying, isHolding, currentTime, duration, queueIndex, playMode } = state;
+  const { currentTrack, isPlaying, isHolding, isInterrupted, isNextPrecached, currentTime, duration, queueIndex, playMode } = state;
   const percent = duration > 0 ? (currentTime / duration) * 100 : 0;
   const t = DEMO_I18N[lang] || DEMO_I18N.en;
 
@@ -104,11 +104,16 @@ export default function App() {
         <span className="badge active">
           {platform.isIOS ? `📱 ${t.badgeIosReady}` : `💻 ${t.badgeDesktop}`}
         </span>
-        <span className={`badge ${isHolding ? 'holding' : ''}`}>
+        <span className={`badge ${isHolding || isInterrupted ? 'holding' : ''}`}>
           {isHolding
             ? `🛡️ ${t.badgeSilentHold}`
-            : `${t.badgeStatus}: ${state.playbackState.toUpperCase()}`}
+            : isInterrupted
+              ? `🔄 ${t.badgeRecovering}`
+              : `${t.badgeStatus}: ${state.playbackState.toUpperCase()}`}
         </span>
+        {isNextPrecached && (
+          <span className="badge active">⚡ {t.badgePrecached}</span>
+        )}
       </div>
 
       {/* Player Card */}
@@ -197,6 +202,7 @@ export default function App() {
           <li>{t.guideStep3}</li>
           <li>{t.guideStep4}</li>
           <li>{t.guideStep5}</li>
+          <li>{t.guideStep6}</li>
         </ol>
       </div>
     </div>

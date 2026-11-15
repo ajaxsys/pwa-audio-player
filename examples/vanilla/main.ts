@@ -28,6 +28,7 @@ const txtSubtitle = document.getElementById('txt-subtitle')!;
 const badgePlatform = document.getElementById('badge-platform')!;
 const badgeState = document.getElementById('badge-state')!;
 const badgeKeepAlive = document.getElementById('badge-keepalive')!;
+const badgePrecache = document.getElementById('badge-precache')!;
 
 const coverImg = document.getElementById('cover-img') as HTMLImageElement;
 const trackTitle = document.getElementById('track-title')!;
@@ -55,6 +56,7 @@ const txtStep2 = document.getElementById('txt-step-2')!;
 const txtStep3 = document.getElementById('txt-step-3')!;
 const txtStep4 = document.getElementById('txt-step-4')!;
 const txtStep5 = document.getElementById('txt-step-5')!;
+const txtStep6 = document.getElementById('txt-step-6')!;
 
 // Back to hub link (dynamic host & subpath support)
 const isDev = window.location.port === '5173';
@@ -115,6 +117,7 @@ function updateI18n(lang: Lang) {
   txtStep3.textContent = t.guideStep3;
   txtStep4.textContent = t.guideStep4;
   txtStep5.textContent = t.guideStep5;
+  txtStep6.textContent = t.guideStep6;
 
   // Platform badge
   badgePlatform.textContent = platform.isIOS
@@ -138,16 +141,23 @@ function updateI18n(lang: Lang) {
 function updateStateDisplay(state: ReturnType<typeof player.getState>) {
   const t = DEMO_I18N[currentLang] || DEMO_I18N.en;
 
-  // KeepAlive Status Badge
+  // KeepAlive / Interruption Recovery Badge
   if (state.isHolding) {
     badgeKeepAlive.textContent = `🛡️ ${t.badgeSilentHold}`;
     badgeKeepAlive.className = 'badge holding';
     badgeState.textContent = `${t.badgeStatus}: SILENT-HOLD`;
+  } else if (state.isInterrupted) {
+    badgeKeepAlive.textContent = `🔄 ${t.badgeRecovering}`;
+    badgeKeepAlive.className = 'badge holding';
+    badgeState.textContent = `${t.badgeStatus}: RECOVERING`;
   } else {
     badgeKeepAlive.textContent = `🛡️ ${t.badgeStatus}: ${t.stateIdle}`;
     badgeKeepAlive.className = 'badge';
     badgeState.textContent = `${t.badgeStatus}: ${state.playbackState.toUpperCase()}`;
   }
+
+  badgePrecache.textContent = `⚡ ${t.badgePrecached}`;
+  badgePrecache.style.display = state.isNextPrecached ? 'inline-flex' : 'none';
 
   // Lyric Box
   if (state.activeLyricText) {

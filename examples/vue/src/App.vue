@@ -28,6 +28,8 @@ const modeIcons: Record<PlayMode, string> = {
 const currentTrack = computed(() => state.value.currentTrack);
 const isPlaying = computed(() => state.value.isPlaying);
 const isHolding = computed(() => state.value.isHolding);
+const isInterrupted = computed(() => state.value.isInterrupted);
+const isNextPrecached = computed(() => state.value.isNextPrecached);
 const currentTime = computed(() => state.value.currentTime);
 const duration = computed(() => state.value.duration);
 const queueIndex = computed(() => state.value.queueIndex);
@@ -120,10 +122,15 @@ const hubUrl = isDev ? `${protocol}//${host}:5170` : '../';
       <span class="badge active">
         {{ platform.isIOS ? `📱 ${t.badgeIosReady}` : `💻 ${t.badgeDesktop}` }}
       </span>
-      <span class="badge" :class="{ holding: isHolding }">
+      <span class="badge" :class="{ holding: isHolding || isInterrupted }">
         {{ isHolding
           ? `🛡️ ${t.badgeSilentHold}`
-          : `${t.badgeStatus}: ${state.playbackState.toUpperCase()}` }}
+          : isInterrupted
+            ? `🔄 ${t.badgeRecovering}`
+            : `${t.badgeStatus}: ${state.playbackState.toUpperCase()}` }}
+      </span>
+      <span v-if="isNextPrecached" class="badge active">
+        ⚡ {{ t.badgePrecached }}
       </span>
     </div>
 
@@ -210,6 +217,7 @@ const hubUrl = isDev ? `${protocol}//${host}:5170` : '../';
         <li>{{ t.guideStep3 }}</li>
         <li>{{ t.guideStep4 }}</li>
         <li>{{ t.guideStep5 }}</li>
+        <li>{{ t.guideStep6 }}</li>
       </ol>
     </div>
   </div>

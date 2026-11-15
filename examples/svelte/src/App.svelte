@@ -32,6 +32,8 @@
   const currentTrack = $derived(playerState.currentTrack);
   const isPlaying = $derived(playerState.isPlaying);
   const isHolding = $derived(playerState.isHolding);
+  const isInterrupted = $derived(playerState.isInterrupted);
+  const isNextPrecached = $derived(playerState.isNextPrecached);
   const currentTime = $derived(playerState.currentTime);
   const duration = $derived(playerState.duration);
   const queueIndex = $derived(playerState.queueIndex);
@@ -114,11 +116,16 @@
     <span class="badge active">
       {platform.isIOS ? `📱 ${t.badgeIosReady}` : `💻 ${t.badgeDesktop}`}
     </span>
-    <span class="badge {isHolding ? 'holding' : ''}">
+    <span class="badge {isHolding || isInterrupted ? 'holding' : ''}">
       {isHolding
         ? `🛡️ ${t.badgeSilentHold}`
-        : `${t.badgeStatus}: ${playerState.playbackState.toUpperCase()}`}
+        : isInterrupted
+          ? `🔄 ${t.badgeRecovering}`
+          : `${t.badgeStatus}: ${playerState.playbackState.toUpperCase()}`}
     </span>
+    {#if isNextPrecached}
+      <span class="badge active">⚡ {t.badgePrecached}</span>
+    {/if}
   </div>
 
   <!-- Player Card -->
@@ -208,6 +215,7 @@
       <li>{t.guideStep3}</li>
       <li>{t.guideStep4}</li>
       <li>{t.guideStep5}</li>
+      <li>{t.guideStep6}</li>
     </ol>
   </div>
 </div>
