@@ -127,6 +127,36 @@
         box-shadow: 0 0 8px #10b981;
       }
 
+      .lang-switcher {
+        display: inline-flex;
+        align-items: center;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 2px 4px;
+        border-radius: 9999px;
+        border: 1px solid var(--card-border);
+        gap: 3px;
+      }
+      .lang-btn {
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        font-size: 11.5px;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 9999px;
+        cursor: pointer;
+        transition: all 120ms ease;
+      }
+      .lang-btn:hover {
+        color: var(--page-fg);
+      }
+      .lang-btn.active {
+        background: var(--accent);
+        color: #04121d;
+      }
+
       /* Main layout */
       .shell {
         position: relative;
@@ -392,13 +422,22 @@
     <!-- Draggable WCO Titlebar -->
     <header class="wco-titlebar">
       <div class="titlebar-group">
-        <a id="link-back" href="/" class="pill-btn no-drag">← Hub</a>
-        <div class="pill-btn no-drag" id="btn-install-hint" style="display:none;">＋ Install PWA</div>
+        <a id="link-back" href="/" class="pill-btn no-drag">
+          <span id="txt-btn-back">← Hub</span>
+        </a>
+        <div class="pill-btn no-drag" id="btn-install-hint" style="display:none;">
+          <span id="txt-btn-install">＋ Install PWA</span>
+        </div>
       </div>
       <div class="titlebar-group">
         <div class="pill-btn">
           <span class="status-dot" id="titlebar-dot"></span>
           <span id="titlebar-status">WCO Idle</span>
+        </div>
+        <div class="lang-switcher no-drag">
+          <button class="lang-btn" data-lang="zh">中文</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="ja">日本語</button>
         </div>
       </div>
     </header>
@@ -408,45 +447,45 @@
       <section class="card">
         <div class="card-header">
           <div>
-            <h2>WCO Corner Harmony Lab</h2>
-            <p class="card-desc">
+            <h2 id="txt-hero-title">WCO Corner Harmony Lab</h2>
+            <p class="card-desc" id="txt-hero-desc">
               安装为 Chrome Desktop PWA 后点击右上角 <code>⌄ / ^</code> 开启 WCO，自由切换纯色、自定义图片/视频、多层 Modal 遮罩观察顶角实时无缝融合；非 WCO 模式下自动休眠零开销。
             </p>
           </div>
           <div class="row">
             <label class="toggle">
               <input type="checkbox" id="chk-force-preview" />
-              <span>浏览器 Tab 强制预览渐变</span>
+              <span id="txt-chk-force-preview">浏览器 Tab 强制预览渐变</span>
             </label>
             <label class="toggle">
               <input type="checkbox" id="chk-sim-cutouts" />
-              <span>模拟原生 WCO 黑框对照</span>
+              <span id="txt-chk-sim-cutouts">模拟原生 WCO 黑框对照</span>
             </label>
           </div>
         </div>
 
         <div class="telemetry-grid">
           <div class="metric">
-            <span class="metric-label">WCO Display Mode</span>
+            <span class="metric-label" id="lbl-metric-mode">WCO Display Mode</span>
             <span class="metric-value" id="val-wco-mode">Inactive</span>
           </div>
           <div class="metric">
-            <span class="metric-label">Corner Engine</span>
+            <span class="metric-label" id="lbl-metric-engine">Corner Engine</span>
             <span class="metric-value" id="val-engine-status">Bypassed (0ms)</span>
           </div>
           <div class="metric">
-            <span class="metric-label">Rect (L / R / H)</span>
+            <span class="metric-label" id="lbl-metric-geometry">Rect (L / R / H)</span>
             <span class="metric-value" id="val-geometry">0 / 0 / 0</span>
           </div>
           <div class="metric">
-            <span class="metric-label">meta[theme-color]</span>
+            <span class="metric-label" id="lbl-metric-theme">meta[theme-color]</span>
             <span class="metric-value">
               <span class="color-swatch-inline" id="val-color-swatch"></span>
               <span id="val-color-hex">#0a0e1a</span>
             </span>
           </div>
           <div class="metric">
-            <span class="metric-label">Backdrop Stack</span>
+            <span class="metric-label" id="lbl-metric-backdrops">Backdrop Stack</span>
             <span class="metric-value" id="val-backdrops">0</span>
           </div>
         </div>
@@ -455,55 +494,55 @@
       <!-- Section 1: Background Color Torture Test -->
       <section class="card">
         <div class="card-header">
-          <h2>1. 背景色切换测试 (Theme &amp; Custom Picker)</h2>
+          <h2 id="txt-sec1-title">1. 背景色切换测试 (Theme &amp; Custom Picker)</h2>
           <div class="row">
             <label class="toggle">
-              <span>自定义取色:</span>
+              <span id="lbl-custom-color">自定义取色:</span>
               <input type="color" id="input-bg-color" value="#0a0e1a" />
             </label>
           </div>
         </div>
         <div class="row" id="swatch-row">
-          <button class="swatch-btn" data-color="#ffffff"><span class="swatch-dot" style="background:#ffffff;"></span>Pure Light</button>
-          <button class="swatch-btn" data-color="#fffdf0"><span class="swatch-dot" style="background:#fffdf0;"></span>Warm Cream</button>
-          <button class="swatch-btn" data-color="#fff0f5"><span class="swatch-dot" style="background:#fff0f5;"></span>Sakura</button>
-          <button class="swatch-btn" data-color="#bae6fd"><span class="swatch-dot" style="background:#bae6fd;"></span>Sky Blue</button>
-          <button class="swatch-btn" data-color="#064e3b"><span class="swatch-dot" style="background:#064e3b;"></span>Emerald</button>
-          <button class="swatch-btn active" data-color="#0a0e1a"><span class="swatch-dot" style="background:#0a0e1a;"></span>Midnight</button>
-          <button class="swatch-btn" data-color="#ea580c"><span class="swatch-dot" style="background:#ea580c;"></span>Sunset</button>
+          <button class="swatch-btn" data-color="#ffffff" data-swatch-key="swatchPureLight"><span class="swatch-dot" style="background:#ffffff;"></span><span class="swatch-name">Pure Light</span></button>
+          <button class="swatch-btn" data-color="#fffdf0" data-swatch-key="swatchWarmCream"><span class="swatch-dot" style="background:#fffdf0;"></span><span class="swatch-name">Warm Cream</span></button>
+          <button class="swatch-btn" data-color="#fff0f5" data-swatch-key="swatchSakura"><span class="swatch-dot" style="background:#fff0f5;"></span><span class="swatch-name">Sakura</span></button>
+          <button class="swatch-btn" data-color="#bae6fd" data-swatch-key="swatchSkyBlue"><span class="swatch-dot" style="background:#bae6fd;"></span><span class="swatch-name">Sky Blue</span></button>
+          <button class="swatch-btn" data-color="#064e3b" data-swatch-key="swatchEmerald"><span class="swatch-dot" style="background:#064e3b;"></span><span class="swatch-name">Emerald</span></button>
+          <button class="swatch-btn active" data-color="#0a0e1a" data-swatch-key="swatchMidnight"><span class="swatch-dot" style="background:#0a0e1a;"></span><span class="swatch-name">Midnight</span></button>
+          <button class="swatch-btn" data-color="#ea580c" data-swatch-key="swatchSunset"><span class="swatch-dot" style="background:#ea580c;"></span><span class="swatch-name">Sunset</span></button>
         </div>
       </section>
 
       <!-- Section 2: Full-Bleed Image / Video Torture Test -->
       <section class="card">
         <div class="card-header">
-          <h2>2. 自定义图片 / 视频背景测试 (顶角取色 + 实心核覆盖)</h2>
+          <h2 id="txt-sec2-title">2. 自定义图片 / 视频背景测试 (顶角取色 + 实心核覆盖)</h2>
           <div class="row">
-            <button class="action-btn secondary" id="btn-clear-media">退出图片背景</button>
+            <button class="action-btn secondary" id="btn-clear-media"><span id="txt-btn-exit-media">退出媒体背景</span></button>
             <label class="action-btn" style="cursor:pointer;">
-              上传本地图片/视频
+              <span id="txt-btn-upload-media">上传本地图片/视频</span>
               <input type="file" id="input-media-file" accept="image/*,video/*" style="display:none;" />
             </label>
           </div>
         </div>
         <div class="row">
-          <button class="swatch-btn" data-preset="warm-wood">🪵 暖木米白百叶窗</button>
-          <button class="swatch-btn" data-preset="golden-sunset">🌅 琥珀落日</button>
-          <button class="swatch-btn" data-preset="split-contrast">🌓 左亮右暗极端分割</button>
-          <button class="swatch-btn" data-preset="ocean-night">🌊 深海极光</button>
+          <button class="swatch-btn" data-preset="warm-wood" id="preset-warm-wood">🪵 暖木米白百叶窗</button>
+          <button class="swatch-btn" data-preset="golden-sunset" id="preset-golden-sunset">🌅 琥珀落日</button>
+          <button class="swatch-btn" data-preset="split-contrast" id="preset-split-contrast">🌓 左亮右暗极端分割</button>
+          <button class="swatch-btn" data-preset="ocean-night" id="preset-ocean-night">🌊 深海极光</button>
         </div>
         <div class="row">
           <div class="slider-group">
-            <span>压暗系数 (<span id="val-dim">35%</span>):</span>
+            <span><span id="lbl-dim">压暗系数</span> (<span id="val-dim">35%</span>):</span>
             <input type="range" id="range-dim" min="0" max="85" value="35" />
           </div>
           <div class="slider-group">
-            <span>模糊 (<span id="val-blur">0px</span>):</span>
+            <span><span id="lbl-blur">模糊</span> (<span id="val-blur">0px</span>):</span>
             <input type="range" id="range-blur" min="0" max="24" value="0" />
           </div>
           <label class="toggle">
             <input type="checkbox" id="chk-broken-mode" />
-            <span>模拟旧版缺陷 (固定 #0a0e1a + 30% 透明，对比大门牙)</span>
+            <span id="txt-chk-broken-mode">模拟旧版缺陷 (固定 #0a0e1a + 30% 透明，对比大门牙)</span>
           </label>
         </div>
       </section>
@@ -511,8 +550,8 @@
       <!-- Section 3: Modals / Drawers / Nested Stack -->
       <section class="card">
         <div class="card-header">
-          <h2>3. 各种 Modal / Drawer / 嵌套遮罩测试</h2>
-          <p class="card-desc">打开浮层后，WCO 顶角会按遮罩颜色与透明度物理混色，消除两端漏光或死黑断层；嵌套弹窗关闭内层时不提前恢复。</p>
+          <h2 id="txt-sec3-title">3. 各种 Modal / Drawer / 嵌套遮罩测试</h2>
+          <p class="card-desc" id="txt-sec3-desc">打开浮层后，WCO 顶角会按遮罩颜色与透明度物理混色，消除两端漏光或死黑断层；嵌套弹窗关闭内层时不提前恢复。</p>
         </div>
         <div class="row">
           <button class="action-btn" id="btn-open-modal">打开居中 Modal</button>
@@ -521,11 +560,11 @@
         </div>
         <div class="row">
           <div class="slider-group">
-            <span>遮罩透明度 (<span id="val-scrim-alpha">65%</span>):</span>
+            <span><span id="lbl-scrim-alpha">遮罩透明度</span> (<span id="val-scrim-alpha">65%</span>):</span>
             <input type="range" id="range-scrim-alpha" min="25" max="90" value="65" />
           </div>
           <label class="toggle">
-            <span>遮罩底色:</span>
+            <span id="lbl-scrim-color">遮罩底色:</span>
             <input type="color" id="input-scrim-color" value="#000000" />
           </label>
         </div>
@@ -536,7 +575,7 @@
     <div id="backdrop-primary" class="backdrop" role="dialog" aria-modal="true">
       <div class="modal-box">
         <h3 id="modal-title">Centered Modal</h3>
-        <p class="card-desc" style="color:#cbd5e1;">
+        <p class="card-desc" id="modal-desc" style="color:#cbd5e1;">
           观察顶部左右 WCO 控制区：其底色已实时按背景色 + 当前遮罩色与透明度混色对齐，无矩形色差边界。
         </p>
         <div class="row">
@@ -549,8 +588,8 @@
     <!-- Nested Modal -->
     <div id="backdrop-nested" class="backdrop nested" role="dialog" aria-modal="true">
       <div class="modal-box">
-        <h3>Nested Modal (Layer 2)</h3>
-        <p class="card-desc" style="color:#cbd5e1;">
+        <h3 id="nested-title">Nested Modal (Layer 2)</h3>
+        <p class="card-desc" id="nested-desc" style="color:#cbd5e1;">
           当前 Backdrop 引用计数为 2。关闭此内层弹窗后，外层遮罩仍处于激活状态，顶栏不会闪烁恢复原色。
         </p>
         <div class="row">

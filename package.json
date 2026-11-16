@@ -14,7 +14,8 @@
     "dev:vanilla": "pnpm --filter example-vanilla dev",
     "dev:react": "pnpm --filter example-react dev",
     "dev:vue": "pnpm --filter example-vue dev",
-    "dev:svelte": "pnpm --filter example-svelte dev"
+    "dev:svelte": "pnpm --filter example-svelte dev",
+    "dev:wco": "pnpm --filter example-wco-corner dev"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

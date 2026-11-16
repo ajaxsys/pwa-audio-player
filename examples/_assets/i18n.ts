@@ -46,6 +46,74 @@ export interface DemoTranslations {
   backToHub: string;
 }
 
+export interface WcoTranslations {
+  pageTitle: string;
+  btnBack: string;
+  btnInstall: string;
+  wcoActive: string;
+  wcoIdle: string;
+  wcoPreview: string;
+
+  // Telemetry Card
+  heroTitle: string;
+  heroDesc: string;
+  chkForcePreview: string;
+  chkSimCutouts: string;
+  metricMode: string;
+  metricModeActive: string;
+  metricModeInactive: string;
+  metricEngine: string;
+  metricEngineBroken: string;
+  metricEngineFeathering: string;
+  metricEngineBypassed: string;
+  metricGeometry: string;
+  metricThemeColor: string;
+  metricBackdrops: string;
+
+  // Section 1: Solid Background
+  sec1Title: string;
+  customColorLabel: string;
+  swatchPureLight: string;
+  swatchWarmCream: string;
+  swatchSakura: string;
+  swatchSkyBlue: string;
+  swatchEmerald: string;
+  swatchMidnight: string;
+  swatchSunset: string;
+
+  // Section 2: Media Background
+  sec2Title: string;
+  btnExitMedia: string;
+  btnUploadMedia: string;
+  presetWarmWood: string;
+  presetGoldenSunset: string;
+  presetSplitContrast: string;
+  presetOceanNight: string;
+  labelDim: string;
+  labelBlur: string;
+  chkBrokenMode: string;
+
+  // Section 3: Modals / Drawers
+  sec3Title: string;
+  sec3Desc: string;
+  btnOpenModal: string;
+  btnOpenDrawer: string;
+  btnOpenSheet: string;
+  labelScrimAlpha: string;
+  labelScrimColor: string;
+
+  // Modals content
+  titleModal: string;
+  titleDrawer: string;
+  titleSheet: string;
+  modalDesc: string;
+  btnOpenNested: string;
+  btnClose: string;
+  titleNested: string;
+  nestedDesc: string;
+  btnCloseNested: string;
+}
+
 export const HUB_I18N: Record<Lang, HubTranslations> = {
   zh: {
     badge: 'PWA Player · 全框架套件',
@@ -181,6 +249,195 @@ export const DEMO_I18N: Record<Lang, DemoTranslations> = {
     guideStep5: '曲が終了した際、画面が消灯したまま次の曲へ自動で進むことを確認してください。',
     guideStep6: '再生中に「次曲プリキャッシュ済」表示を確認し、音声割り込み後の自動再生復帰も検証できます。',
     backToHub: '← デモ一覧へ戻る'
+  }
+};
+
+export const WCO_I18N: Record<Lang, WcoTranslations> = {
+  zh: {
+    pageTitle: 'WCO 顶角无缝融合实验室 · pwa-audio-player',
+    btnBack: '← 返回 Hub',
+    btnInstall: '＋ 安装 PWA',
+    wcoActive: 'WCO 激活中',
+    wcoIdle: '浏览器 Tab · 0ms 休眠',
+    wcoPreview: '预览模式',
+
+    heroTitle: 'WCO Corner Harmony Lab',
+    heroDesc: '安装为 Chrome Desktop PWA 后点击右上角 <code>⌄ / ^</code> 开启 WCO，自由切换纯色、自定义图片/视频、多层 Modal 遮罩观察顶角实时无缝融合；非 WCO 模式下自动休眠零开销。',
+    chkForcePreview: '浏览器 Tab 强制预览渐变',
+    chkSimCutouts: '模拟原生 WCO 黑框对照',
+    metricMode: 'WCO 窗口模式',
+    metricModeActive: '已激活 (原生 WCO)',
+    metricModeInactive: '未激活',
+    metricEngine: '顶角融合引擎',
+    metricEngineBroken: '旧版缺陷模拟',
+    metricEngineFeathering: '运行中 (羽化采样)',
+    metricEngineBypassed: '已旁路 (0ms 休眠)',
+    metricGeometry: '边距 (左 / 右 / 高度)',
+    metricThemeColor: 'meta[theme-color]',
+    metricBackdrops: '遮罩引用计数',
+
+    sec1Title: '1. 背景色切换测试 (Theme & 自定义取色)',
+    customColorLabel: '自定义取色:',
+    swatchPureLight: '纯净亮白',
+    swatchWarmCream: '暖米白',
+    swatchSakura: '樱花粉',
+    swatchSkyBlue: '天青蓝',
+    swatchEmerald: '祖母绿',
+    swatchMidnight: '深邃夜空',
+    swatchSunset: '落日橙',
+
+    sec2Title: '2. 自定义图片 / 视频背景测试 (顶角取色 + 实心核覆盖)',
+    btnExitMedia: '退出媒体背景',
+    btnUploadMedia: '上传本地图片/视频',
+    presetWarmWood: '🪵 暖木米白百叶窗',
+    presetGoldenSunset: '🌅 琥珀落日',
+    presetSplitContrast: '🌓 左亮右暗极端分割',
+    presetOceanNight: '🌊 深海极光',
+    labelDim: '压暗系数',
+    labelBlur: '模糊',
+    chkBrokenMode: '模拟旧版缺陷 (固定 #0a0e1a + 30% 透明，对比大门牙)',
+
+    sec3Title: '3. 各种 Modal / Drawer / 嵌套遮罩测试',
+    sec3Desc: '打开浮层后，WCO 顶角会按遮罩颜色与透明度物理混色，消除两端漏光或死黑断层；嵌套弹窗关闭内层时不提前恢复。',
+    btnOpenModal: '打开居中 Modal',
+    btnOpenDrawer: '打开右侧 Drawer',
+    btnOpenSheet: '打开底部 Sheet',
+    labelScrimAlpha: '遮罩透明度',
+    labelScrimColor: '遮罩底色:',
+
+    titleModal: '居中 Modal',
+    titleDrawer: '右侧 Slide-Over Drawer',
+    titleSheet: '底部 Sheet',
+    modalDesc: '观察顶部左右 WCO 控制区：其底色已实时按背景色 + 当前遮罩色与透明度混色对齐，无矩形色差边界。',
+    btnOpenNested: '打开嵌套第二层 Modal',
+    btnClose: '关闭',
+    titleNested: '嵌套弹窗 (第 2 层)',
+    nestedDesc: '当前 Backdrop 引用计数为 2。关闭此内层弹窗后，外层遮罩仍处于激活状态，顶栏不会闪烁恢复原色。',
+    btnCloseNested: '关闭内层 Modal'
+  },
+  en: {
+    pageTitle: 'WCO Corner Harmony Lab · pwa-audio-player',
+    btnBack: '← Hub',
+    btnInstall: '＋ Install PWA',
+    wcoActive: 'WCO Active',
+    wcoIdle: 'Browser Tab · 0ms Idle',
+    wcoPreview: 'Preview Mode',
+
+    heroTitle: 'WCO Corner Harmony Lab',
+    heroDesc: 'Install as Chrome Desktop PWA and toggle <code>⌄ / ^</code> top-right for WCO. Test solid colors, full-bleed media sampling, and stacked modals for seamless corner blending. Sleeps with zero overhead outside WCO mode.',
+    chkForcePreview: 'Force preview gradient in browser tab',
+    chkSimCutouts: 'Simulate native WCO cutouts',
+    metricMode: 'WCO Display Mode',
+    metricModeActive: 'Active (Native WCO)',
+    metricModeInactive: 'Inactive',
+    metricEngine: 'Corner Engine',
+    metricEngineBroken: 'Legacy Broken Sim',
+    metricEngineFeathering: 'Active (Feathering)',
+    metricEngineBypassed: 'Bypassed (0ms Idle)',
+    metricGeometry: 'Rect (L / R / H)',
+    metricThemeColor: 'meta[theme-color]',
+    metricBackdrops: 'Backdrop Stack',
+
+    sec1Title: '1. Background Color Torture Test (Theme & Custom Picker)',
+    customColorLabel: 'Custom Color:',
+    swatchPureLight: 'Pure Light',
+    swatchWarmCream: 'Warm Cream',
+    swatchSakura: 'Sakura',
+    swatchSkyBlue: 'Sky Blue',
+    swatchEmerald: 'Emerald',
+    swatchMidnight: 'Midnight',
+    swatchSunset: 'Sunset',
+
+    sec2Title: '2. Full-Bleed Image / Video Torture Test (Top-Edge Sampling & Solid Core)',
+    btnExitMedia: 'Exit Media Background',
+    btnUploadMedia: 'Upload Local Image / Video',
+    presetWarmWood: '🪵 Warm Wood Blinds',
+    presetGoldenSunset: '🌅 Amber Sunset',
+    presetSplitContrast: '🌓 Split Bright / Dark',
+    presetOceanNight: '🌊 Abyssal Aurora',
+    labelDim: 'Dim Overlay',
+    labelBlur: 'Blur',
+    chkBrokenMode: 'Simulate Legacy Flaw (Fixed #0a0e1a + 30% alpha gap)',
+
+    sec3Title: '3. Modals / Drawers / Nested Stack Test',
+    sec3Desc: 'When modals open, WCO corners physically blend the scrim color & opacity to eliminate light leakage or dark banding; nested modals do not prematurely reset on inner dismissal.',
+    btnOpenModal: 'Open Centered Modal',
+    btnOpenDrawer: 'Open Right Drawer',
+    btnOpenSheet: 'Open Bottom Sheet',
+    labelScrimAlpha: 'Scrim Opacity',
+    labelScrimColor: 'Scrim Base Color:',
+
+    titleModal: 'Centered Modal',
+    titleDrawer: 'Slide-Over Drawer',
+    titleSheet: 'Bottom Sheet',
+    modalDesc: 'Observe the top left & right WCO controls: background color is blended in real time with the current scrim color & opacity, eliminating rectangular seams.',
+    btnOpenNested: 'Open Nested Layer 2 Modal',
+    btnClose: 'Close',
+    titleNested: 'Nested Modal (Layer 2)',
+    nestedDesc: 'Current backdrop reference count is 2. Dismissing this inner modal leaves the outer scrim active, preventing top bar color flicker.',
+    btnCloseNested: 'Close Inner Modal'
+  },
+  ja: {
+    pageTitle: 'WCO コーナーハーモニー実験場 · pwa-audio-player',
+    btnBack: '← デモ一覧',
+    btnInstall: '＋ PWAをインストール',
+    wcoActive: 'WCO 有効',
+    wcoIdle: 'ブラウザタブ · 0ms 休眠',
+    wcoPreview: 'プレビューモード',
+
+    heroTitle: 'WCO コーナーハーモニー実験場',
+    heroDesc: 'Chrome デスクトップ PWA としてインストール後、右上の <code>⌄ / ^</code> で WCO を有効化。単色、画像/動画の端部サンプリング、モーダル重なり時の頂角リアルタイム融合を検証可能。非 WCO 時は完全休眠・オーバーヘッドゼロ。',
+    chkForcePreview: 'ブラウザタブでグラデーション強制プレビュー',
+    chkSimCutouts: 'ネイティブ WCO 枠をシミュレート',
+    metricMode: 'WCO 表示モード',
+    metricModeActive: '有効 (ネイティブ WCO)',
+    metricModeInactive: '無効',
+    metricEngine: 'コーナー融合エンジン',
+    metricEngineBroken: '旧実装の欠陥シミュレート',
+    metricEngineFeathering: '稼働中 (フェザリング)',
+    metricEngineBypassed: 'バイパス済 (0ms 休眠)',
+    metricGeometry: '矩形領域 (左 / 右 / 高さ)',
+    metricThemeColor: 'meta[theme-color]',
+    metricBackdrops: 'モーダル重なり数',
+
+    sec1Title: '1. 背景色切替テスト (テーマ & カスタムピッカー)',
+    customColorLabel: 'カスタム色:',
+    swatchPureLight: 'ピュアホワイト',
+    swatchWarmCream: 'ウォームクリーム',
+    swatchSakura: '桜ピンク',
+    swatchSkyBlue: 'スカイブルー',
+    swatchEmerald: 'エメラルド',
+    swatchMidnight: 'ミッドナイト',
+    swatchSunset: 'サンセット',
+
+    sec2Title: '2. 画像 / 動画背景テスト (頂角サンプリング + ソリッドコア)',
+    btnExitMedia: 'メディア背景を解除',
+    btnUploadMedia: '画像 / 動画をアップロード',
+    presetWarmWood: '🪵 暖木ブラインド',
+    presetGoldenSunset: '🌅 琥珀色の夕日',
+    presetSplitContrast: '🌓 左右明暗分割',
+    presetOceanNight: '🌊 深海オーロラ',
+    labelDim: '減光オーバーレイ',
+    labelBlur: 'ぼかし',
+    chkBrokenMode: '旧実装の欠陥をシミュレート（固定色+30%透過の目立つ隙間）',
+
+    sec3Title: '3. 各種モーダル / ドロワー / 重複オーバーレイ検証',
+    sec3Desc: 'オーバーレイ展開時、WCO頂角はスクリムの色と透過率に合わせて物理混色され、明暗の不自然な境界線を解消します。多層モーダルの内側を閉じても外側が維持されます。',
+    btnOpenModal: '中央モーダルを開く',
+    btnOpenDrawer: '右側ドロワーを開く',
+    btnOpenSheet: 'ボトムシートを開く',
+    labelScrimAlpha: 'スクリム透過度',
+    labelScrimColor: 'スクリム背景色:',
+
+    titleModal: '中央モーダル',
+    titleDrawer: 'スライドオーバー・ドロワー',
+    titleSheet: 'ボトムシート',
+    modalDesc: '上部左右の WCO コントロール領域を確認してください。背景色と現在のスクリム色・透過率がリアルタイムに混色され、矩形の継ぎ目がありません。',
+    btnOpenNested: '第2層ネストモーダルを開く',
+    btnClose: '閉じる',
+    titleNested: 'ネストモーダル (第2層)',
+    nestedDesc: '現在の Backdrop 参照カウントは 2 です。この内側モーダルを閉じても外側スクリムが保持され、タイトルバーの色がちらつくことはありません。',
+    btnCloseNested: '内側モーダルを閉じる'
   }
 };
 

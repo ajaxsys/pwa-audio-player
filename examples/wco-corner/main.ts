@@ -4,6 +4,16 @@ import {
   parseColorRgb,
   type WcoTitlebarState
 } from 'pwa-audio-player';
+import {
+  WCO_I18N,
+  detectBrowserLang,
+  savePreferredLang,
+  type Lang,
+  type WcoTranslations
+} from '../_assets/i18n';
+
+// 0. Language state & initialization
+let currentLang: Lang = detectBrowserLang();
 
 // 1. Register minimal SW so Chrome Desktop treats this demo as an installable WCO PWA
 if ('serviceWorker' in navigator) {
@@ -44,7 +54,7 @@ const wco = createWcoTitlebarController({
   modalOverlayAlpha: 0.65
 });
 
-// DOM references
+// DOM references - General & WCO
 const bgStage = document.getElementById('bg-stage')!;
 const bgImg = document.getElementById('bg-media-img') as HTMLImageElement;
 const bgVideo = document.getElementById('bg-media-video') as HTMLVideoElement;
@@ -89,9 +99,46 @@ const rangeScrimAlpha = document.getElementById('range-scrim-alpha') as HTMLInpu
 const valScrimAlpha = document.getElementById('val-scrim-alpha')!;
 const inputScrimColor = document.getElementById('input-scrim-color') as HTMLInputElement;
 
+// DOM references - i18n
+const txtBtnBack = document.getElementById('txt-btn-back')!;
+const txtBtnInstall = document.getElementById('txt-btn-install')!;
+const txtHeroTitle = document.getElementById('txt-hero-title')!;
+const txtHeroDesc = document.getElementById('txt-hero-desc')!;
+const txtChkForcePreview = document.getElementById('txt-chk-force-preview')!;
+const txtChkSimCutouts = document.getElementById('txt-chk-sim-cutouts')!;
+
+const lblMetricMode = document.getElementById('lbl-metric-mode')!;
+const lblMetricEngine = document.getElementById('lbl-metric-engine')!;
+const lblMetricGeometry = document.getElementById('lbl-metric-geometry')!;
+const lblMetricTheme = document.getElementById('lbl-metric-theme')!;
+const lblMetricBackdrops = document.getElementById('lbl-metric-backdrops')!;
+
+const txtSec1Title = document.getElementById('txt-sec1-title')!;
+const lblCustomColor = document.getElementById('lbl-custom-color')!;
+
+const txtSec2Title = document.getElementById('txt-sec2-title')!;
+const txtBtnExitMedia = document.getElementById('txt-btn-exit-media')!;
+const txtBtnUploadMedia = document.getElementById('txt-btn-upload-media')!;
+const presetWarmWood = document.getElementById('preset-warm-wood')!;
+const presetGoldenSunset = document.getElementById('preset-golden-sunset')!;
+const presetSplitContrast = document.getElementById('preset-split-contrast')!;
+const presetOceanNight = document.getElementById('preset-ocean-night')!;
+const lblDim = document.getElementById('lbl-dim')!;
+const lblBlur = document.getElementById('lbl-blur')!;
+const txtChkBrokenMode = document.getElementById('txt-chk-broken-mode')!;
+
+const txtSec3Title = document.getElementById('txt-sec3-title')!;
+const txtSec3Desc = document.getElementById('txt-sec3-desc')!;
+const lblScrimAlpha = document.getElementById('lbl-scrim-alpha')!;
+const lblScrimColor = document.getElementById('lbl-scrim-color')!;
+const modalDesc = document.getElementById('modal-desc')!;
+const nestedTitle = document.getElementById('nested-title')!;
+const nestedDesc = document.getElementById('nested-desc')!;
+
 let activeObjectUrl: string | null = null;
 let releasePrimaryBackdrop: (() => void) | null = null;
 let releaseNestedBackdrop: (() => void) | null = null;
+let currentOverlayMode: 'modal' | 'drawer' | 'sheet' | null = null;
 
 function revokeCurrentObjectUrl() {
   if (activeObjectUrl) {
@@ -203,6 +250,7 @@ bgVideo.addEventListener('loadeddata', () => {
 
 // Render telemetry & simulated comparison states
 function renderState(state: WcoTitlebarState) {
+  const t = WCO_I18N[currentLang];
   const broken = chkBrokenMode.checked;
   const overlayEl = document.querySelector<HTMLElement>('[data-wco-corner-overlay="true"]');
   const metaTheme = document.querySelector('meta[name="theme-color"]');
@@ -236,17 +284,17 @@ function renderState(state: WcoTitlebarState) {
 
   titlebarDot.classList.toggle('active', state.effectiveActive);
   titlebarStatus.textContent = state.geometry.visible
-    ? 'WCO Active'
+    ? t.wcoActive
     : state.forcePreview
-      ? 'Preview Mode'
-      : 'Browser Tab · 0ms Idle';
+      ? t.wcoPreview
+      : t.wcoIdle;
 
-  valWcoMode.textContent = state.geometry.visible ? 'Active (Native WCO)' : 'Inactive';
+  valWcoMode.textContent = state.geometry.visible ? t.metricModeActive : t.metricModeInactive;
   valEngineStatus.textContent = state.effectiveActive
     ? broken
-      ? 'Legacy Broken Sim'
-      : 'Active (Feathering)'
-    : 'Bypassed (0ms Idle)';
+      ? t.metricEngineBroken
+      : t.metricEngineFeathering
+    : t.metricEngineBypassed;
   valGeometry.textContent = `${state.geometry.left}px / ${state.geometry.right}px / ${state.geometry.height}px`;
   valColorSwatch.style.background = displayColor;
   valColorHex.textContent = displayColor;
@@ -254,6 +302,87 @@ function renderState(state: WcoTitlebarState) {
 }
 
 wco.subscribe(renderState);
+
+// i18n update handler
+function updateI18n(lang: Lang) {
+  currentLang = lang;
+  const t = WCO_I18N[lang];
+
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+  document.title = t.pageTitle;
+
+  txtBtnBack.textContent = t.btnBack;
+  txtBtnInstall.textContent = t.btnInstall;
+  txtHeroTitle.textContent = t.heroTitle;
+  txtHeroDesc.innerHTML = t.heroDesc;
+  txtChkForcePreview.textContent = t.chkForcePreview;
+  txtChkSimCutouts.textContent = t.chkSimCutouts;
+
+  lblMetricMode.textContent = t.metricMode;
+  lblMetricEngine.textContent = t.metricEngine;
+  lblMetricGeometry.textContent = t.metricGeometry;
+  lblMetricTheme.textContent = t.metricThemeColor;
+  lblMetricBackdrops.textContent = t.metricBackdrops;
+
+  txtSec1Title.textContent = t.sec1Title;
+  lblCustomColor.textContent = t.customColorLabel;
+
+  swatchButtons.forEach((btn) => {
+    const key = btn.dataset.swatchKey as keyof WcoTranslations | undefined;
+    const nameEl = btn.querySelector('.swatch-name');
+    if (key && nameEl && t[key]) {
+      nameEl.textContent = t[key] as string;
+    }
+  });
+
+  txtSec2Title.textContent = t.sec2Title;
+  txtBtnExitMedia.textContent = t.btnExitMedia;
+  txtBtnUploadMedia.textContent = t.btnUploadMedia;
+  presetWarmWood.textContent = t.presetWarmWood;
+  presetGoldenSunset.textContent = t.presetGoldenSunset;
+  presetSplitContrast.textContent = t.presetSplitContrast;
+  presetOceanNight.textContent = t.presetOceanNight;
+  lblDim.textContent = t.labelDim;
+  lblBlur.textContent = t.labelBlur;
+  txtChkBrokenMode.textContent = t.chkBrokenMode;
+
+  txtSec3Title.textContent = t.sec3Title;
+  txtSec3Desc.textContent = t.sec3Desc;
+  btnOpenModal.textContent = t.btnOpenModal;
+  btnOpenDrawer.textContent = t.btnOpenDrawer;
+  btnOpenSheet.textContent = t.btnOpenSheet;
+  lblScrimAlpha.textContent = t.labelScrimAlpha;
+  lblScrimColor.textContent = t.labelScrimColor;
+
+  if (currentOverlayMode) {
+    if (currentOverlayMode === 'drawer') modalTitle.textContent = t.titleDrawer;
+    else if (currentOverlayMode === 'sheet') modalTitle.textContent = t.titleSheet;
+    else modalTitle.textContent = t.titleModal;
+  }
+  modalDesc.textContent = t.modalDesc;
+  btnOpenNested.textContent = t.btnOpenNested;
+  btnClosePrimary.textContent = t.btnClose;
+  nestedTitle.textContent = t.titleNested;
+  nestedDesc.textContent = t.nestedDesc;
+  btnCloseNested.textContent = t.btnCloseNested;
+
+  document.querySelectorAll<HTMLButtonElement>('.lang-btn').forEach((btn) => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  renderState(wco.getState());
+}
+
+// Language switcher clicks
+document.querySelectorAll<HTMLButtonElement>('.lang-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const selected = btn.dataset.lang as Lang;
+    if (selected && (selected === 'zh' || selected === 'en' || selected === 'ja')) {
+      savePreferredLang(selected);
+      updateI18n(selected);
+    }
+  });
+});
 
 // Event bindings
 chkForcePreview.addEventListener('change', () => {
@@ -332,11 +461,20 @@ function updateScrimStyle() {
 rangeScrimAlpha.addEventListener('input', updateScrimStyle);
 inputScrimColor.addEventListener('input', updateScrimStyle);
 
-function openPrimaryOverlay(mode: 'modal' | 'drawer' | 'sheet', title: string) {
+function openPrimaryOverlay(mode: 'modal' | 'drawer' | 'sheet') {
+  currentOverlayMode = mode;
+  const t = WCO_I18N[currentLang];
   backdropPrimary.classList.remove('drawer-mode', 'sheet-mode');
-  if (mode === 'drawer') backdropPrimary.classList.add('drawer-mode');
-  if (mode === 'sheet') backdropPrimary.classList.add('sheet-mode');
-  modalTitle.textContent = title;
+  if (mode === 'drawer') {
+    backdropPrimary.classList.add('drawer-mode');
+    modalTitle.textContent = t.titleDrawer;
+  } else if (mode === 'sheet') {
+    backdropPrimary.classList.add('sheet-mode');
+    modalTitle.textContent = t.titleSheet;
+  } else {
+    modalTitle.textContent = t.titleModal;
+  }
+
   backdropPrimary.classList.add('open');
   if (!releasePrimaryBackdrop) {
     releasePrimaryBackdrop = wco.pushBackdrop();
@@ -345,13 +483,14 @@ function openPrimaryOverlay(mode: 'modal' | 'drawer' | 'sheet', title: string) {
 
 function closePrimaryOverlay() {
   backdropPrimary.classList.remove('open');
+  currentOverlayMode = null;
   releasePrimaryBackdrop?.();
   releasePrimaryBackdrop = null;
 }
 
-btnOpenModal.addEventListener('click', () => openPrimaryOverlay('modal', 'Centered Modal'));
-btnOpenDrawer.addEventListener('click', () => openPrimaryOverlay('drawer', 'Slide-Over Drawer'));
-btnOpenSheet.addEventListener('click', () => openPrimaryOverlay('sheet', 'Bottom Sheet'));
+btnOpenModal.addEventListener('click', () => openPrimaryOverlay('modal'));
+btnOpenDrawer.addEventListener('click', () => openPrimaryOverlay('drawer'));
+btnOpenSheet.addEventListener('click', () => openPrimaryOverlay('sheet'));
 btnClosePrimary.addEventListener('click', closePrimaryOverlay);
 backdropPrimary.addEventListener('click', (e) => {
   if (e.target === backdropPrimary) closePrimaryOverlay();
@@ -374,3 +513,6 @@ btnCloseNested.addEventListener('click', closeNestedOverlay);
 backdropNested.addEventListener('click', (e) => {
   if (e.target === backdropNested) closeNestedOverlay();
 });
+
+// Initialize UI with preferred or detected language
+updateI18n(currentLang);
